@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using TerranForum.Application.Services;
+using TerranForum.Infrastructure.Services;
 
 namespace TerranForum.Infrastructure
 {
@@ -22,6 +24,9 @@ namespace TerranForum.Infrastructure
             {
                 options.UseSqlServer(connectionString, x => x.MigrationsAssembly(assemblyName));
             });
+
+            services.AddTransient<ISeederService, SeederService>();
+            services.AddHostedService<HostedSeederService>();
 
             return services;
         }

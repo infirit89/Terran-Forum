@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using TerranForum.Domain.Models;
 using TerranForum.Infrastructure;
 
 namespace TerranForum
@@ -12,8 +14,13 @@ namespace TerranForum
                 throw new NullReferenceException("Connection string was null");
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication();
+            builder.Services
+                .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = false)
+                .AddEntityFrameworkStores<TerranForumDbContext>();
+
             builder.Services.AddInfrastructure(connectionString);
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
