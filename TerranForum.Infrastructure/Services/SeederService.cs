@@ -5,8 +5,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Enums;
 using TerranForum.Domain.Models;
@@ -19,13 +21,15 @@ namespace TerranForum.Infrastructure.Services
             RoleManager<IdentityRole> roleManager, 
             IUserStore<ApplicationUser> userStore, 
             UserManager<ApplicationUser> userManager,
-            TerranForumDbContext dbContext)
+            IPostRepository postRepository,
+            IForumRepository forumRepository)
         {
             _Logger = logger;
             _RoleManager = roleManager;
             _UserStore = userStore;
             _UserManager = userManager;
-            _DbContext = dbContext;
+            _PostRepository = postRepository;
+            _ForumRepository = forumRepository;
         }
 
         public async Task SeedRolesAsync()
@@ -50,35 +54,28 @@ namespace TerranForum.Infrastructure.Services
         public async Task SeedForumAsync()
         {
             _Logger.LogInformation("Seeding forum");
-            Forum? forum = await _DbContext.Forums.FirstOrDefaultAsync(x => x.Title == TestForum);
-            if (forum == null)
+            Forum forum = new Forum()
             {
-                forum = new Forum()
-                {
-                    Title = TestForum
-                };
-                await _DbContext.Forums.AddAsync(forum);
-            }
+                Id = TestForumId,
+                Title = TestForum
+            };
+            await _ForumRepository.CreateAsync(forum);
 
-            if (!await _DbContext.Posts.AnyAsync(x => x.Content == TestForumMasterPost)) 
+            ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
+            Post masterPost = new Post()
             {
-                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-                Post masterPost = new Post()
-                {
-                    Content = TestForumMasterPost,
-                    User = user,
-                    CreatedAt = DateTime.Now,
-                    Forum = forum,
-                    IsMaster = true
-                };
+                Id = TestForumMasterPostId,
+                Content = TestForumMasterPost,
+                User = user,
+                CreatedAt = DateTime.Now,
+                Forum = forum,
+                IsMaster = true
+            };
 
-                await _DbContext.Posts.AddAsync(masterPost);
-            }
-
-            await _DbContext.SaveChangesAsync();
+            await _PostRepository.CreateAsync(masterPost);
         }
 
-        private async Task<bool> CreateUserAndAddToRole(string userName, string role) 
+        private async Task<bool> CreateUserAndAddToRole(string userName, string role)
         {
             _Logger.LogInformation("\tCreating user: {0} with role: {1}", userName, role);
             ApplicationUser user = new ApplicationUser();
@@ -98,11 +95,14 @@ namespace TerranForum.Infrastructure.Services
         private readonly RoleManager<IdentityRole> _RoleManager;
         private readonly IUserStore<ApplicationUser> _UserStore;
         private readonly UserManager<ApplicationUser> _UserManager;
-        private readonly TerranForumDbContext _DbContext;
+        private readonly IPostRepository _PostRepository;
+        private readonly IForumRepository _ForumRepository;
         private const string TestAdmin = "Admin0";
         private const string TestUser = "User0";
         private const string TestPassword = "Test@T1";
         private const string TestForum = "Forum0";
         private const string TestForumMasterPost = "Hello, this is a test post!";
+        private const int TestForumId = 1;
+        private const int TestForumMasterPostId = 1;
     }
 }

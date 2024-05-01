@@ -30,5 +30,17 @@ namespace TerranForum.Infrastructure
 
             base.OnModelCreating(builder);
         }
+
+        public async Task<bool> TrySaveAsync()
+        {
+            try
+            {
+                return await SaveChangesAsync() > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
