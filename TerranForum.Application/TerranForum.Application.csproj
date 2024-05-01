@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TerranForum.Domain\TerranForum.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

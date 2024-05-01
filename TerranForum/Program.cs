@@ -1,3 +1,5 @@
+using TerranForum.Infrastructure;
+
 namespace TerranForum
 {
     public class Program
@@ -6,8 +8,12 @@ namespace TerranForum
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            string connectionString = builder.Configuration.GetConnectionString("TerranForum") ??
+                throw new NullReferenceException("Connection string was null");
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddInfrastructure(connectionString);
 
             var app = builder.Build();
 
