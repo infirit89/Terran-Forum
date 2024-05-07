@@ -54,25 +54,30 @@ namespace TerranForum.Infrastructure.Services
         public async Task SeedForumAsync()
         {
             _Logger.LogInformation("Seeding forum");
-            Forum forum = new Forum()
+            Forum? forum = await _ForumRepository.GetByIdAsync(TestForumId);
+            if (forum == null) 
             {
-                Id = TestForumId,
-                Title = TestForum
-            };
-            await _ForumRepository.CreateAsync(forum);
+                forum = new Forum()
+                {
+                    Title = TestForum
+                };
+                await _ForumRepository.CreateAsync(forum);
+            }
 
-            ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-            Post masterPost = new Post()
+            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumMasterPostId)) 
             {
-                Id = TestForumMasterPostId,
-                Content = TestForumMasterPost,
-                User = user,
-                CreatedAt = DateTime.Now,
-                Forum = forum,
-                IsMaster = true
-            };
+                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
+                Post masterPost = new Post()
+                {
+                    Content = TestForumMasterPost,
+                    User = user,
+                    CreatedAt = DateTime.Now,
+                    Forum = forum,
+                    IsMaster = true
+                };
 
-            await _PostRepository.CreateAsync(masterPost);
+                await _PostRepository.CreateAsync(masterPost);
+            }
         }
 
         private async Task<bool> CreateUserAndAddToRole(string userName, string role)

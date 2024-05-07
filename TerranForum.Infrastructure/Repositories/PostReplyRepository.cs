@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.Linq.Expressions;
 using TerranForum.Application.Repositories;
 using TerranForum.Domain.Models;
 
@@ -24,9 +25,9 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> ExsistsAsync(Predicate<PostReply> predicate)
+        public async Task<bool> ExsistsAsync(Expression<Func<PostReply, bool>> predicate)
         {
-            return await _DbContext.PostReplies.AnyAsync(x => predicate(x));
+            return await _DbContext.PostReplies.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<PostReply>> GetAllAsync(Predicate<PostReply>? predicate = null)

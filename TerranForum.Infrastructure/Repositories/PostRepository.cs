@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TerranForum.Application.Repositories;
@@ -28,9 +29,9 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> ExsistsAsync(Predicate<Post> predicate)
+        public async Task<bool> ExsistsAsync(Expression<Func<Post, bool>> predicate)
         {
-            return await _DbContext.Posts.AnyAsync(x => predicate(x));
+            return await _DbContext.Posts.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<Post>> GetAllAsync(Predicate<Post>? predicate = null)

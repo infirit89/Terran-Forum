@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TerranForum.Application.Repositories;
 using TerranForum.Domain.Models;
 
@@ -44,9 +45,9 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.Forums.Skip(page * size).Take(size).ToListAsync();
         }
 
-        public async Task<bool> ExsistsAsync(Predicate<Forum> predicate)
+        public async Task<bool> ExsistsAsync(Expression<Func<Forum, bool>> predicate)
         {
-            return await _DbContext.Forums.AnyAsync(x => predicate(x));
+            return await _DbContext.Forums.AnyAsync(predicate);
         }
         
         private readonly TerranForumDbContext _DbContext;

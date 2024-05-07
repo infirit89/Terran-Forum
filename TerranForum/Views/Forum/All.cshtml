@@ -1,0 +1,22 @@
+﻿@using TerranForum.Domain.Models;
+@model IEnumerable<Forum>
+@{
+
+}
+
+<div>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item.Title</li>
+        }
+    </ul>
+
+    <form method="post" asp-controller="Forum" asp-action="PreviousPage">
+        <input type="submit" value="Previous" />
+    </form>
+
+    <form method="post" asp-controller="Forum" asp-action="NextPage">
+        <input type="submit" value="Next"/>
+    </form>
+</div>
