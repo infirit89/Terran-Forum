@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Domain.Models;
 
@@ -40,9 +41,13 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<IEnumerable<Forum>> GetForumsPaged(int page, int size) 
+        public async Task<GetForumPagedModel> GetForumsPagedAsync(int page, int size) 
         {
-            return await _DbContext.Forums.Skip(page * size).Take(size).ToListAsync();
+            return new GetForumPagedModel()
+            {
+                Forums = await _DbContext.Forums.Skip(page * size).Take(size).ToListAsync(),
+                PageCount = Math.Max(await _DbContext.Forums.CountAsync() / size, 1)
+            };
         }
 
         public async Task<bool> ExsistsAsync(Expression<Func<Forum, bool>> predicate)

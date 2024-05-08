@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TerranForum.Application.Dtos.Forum;
+using TerranForum.Application.Dtos.ForumDtos;
 
 namespace TerranForum.Application.Services
 {

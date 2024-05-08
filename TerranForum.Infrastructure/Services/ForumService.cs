@@ -1,4 +1,4 @@
-﻿using TerranForum.Application.Dtos.Forum;
+﻿using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Models;

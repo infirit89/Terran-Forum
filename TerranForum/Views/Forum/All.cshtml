@@ -1,22 +1,42 @@
 ﻿@using TerranForum.Domain.Models;
 @model IEnumerable<Forum>
 @{
-
+    int currentPage = (int)ViewData["CurrentPage"]!;
+    int pageCount = (int)ViewData["PageCount"]!;
+    int previousPage = Math.Max(currentPage - 1, 0);
+    int nextPage = Math.Min(currentPage + 1, pageCount - 1);
 }
 
 <div>
     <ul>
         @foreach (var item in Model)
         {
-            <li>@item.Title</li>
+            <li><a asp-controller="Forum">@item.Title</a></li>
         }
     </ul>
 
-    <form method="post" asp-controller="Forum" asp-action="PreviousPage">
-        <input type="submit" value="Previous" />
+    <form method="get" asp-controller="Forum" asp-action="All">
+        <input name="page" value="@(previousPage)" hidden />
+        @if (previousPage > 0)
+        {
+            <input type="submit" value="Previous"/>
+        }
+        else
+        {
+            <input type="submit" value="Previous" disabled/>
+        }
     </form>
 
-    <form method="post" asp-controller="Forum" asp-action="NextPage">
-        <input type="submit" value="Next"/>
+    <form method="get" asp-controller="Forum" asp-action="All">
+        <input name="page" value="@(nextPage)" hidden />
+
+        @if (nextPage < pageCount - 1)
+        {
+            <input type="submit" value="Next"/>
+        }
+        else
+        {
+            <input type="submit" value="Next" disabled/>
+        }
     </form>
 </div>
