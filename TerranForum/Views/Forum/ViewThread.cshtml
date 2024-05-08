@@ -4,13 +4,20 @@
 @{
 }
 
-<div>
+<div class="py-4">
     <h3>@Model.Title</h3>
 
     <ul>
         @foreach (var item in Model.Posts)
         {
-            <li>@item.Content</li>
+            @if (item.IsMaster)
+            {
+                <li>Master: @item.Content</li>
+            }
+            else
+            {
+                <li>@item.Content</li>
+            }
         }
     </ul>
 </div>

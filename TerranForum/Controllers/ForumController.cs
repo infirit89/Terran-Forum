@@ -33,12 +33,10 @@ namespace TerranForum.Controllers
             if (forum == null)
                 return NotFound();
 
-            IEnumerable<Post> posts = await _ForumService.GetAllPostsForForum(forum.Id);
-
             ForumThreadViewModel forumThreadViewModel = new ForumThreadViewModel()
             {
                 Title = forum.Title,
-                Posts = posts
+                Posts = forum.Posts
             };
 
             return View(forumThreadViewModel);

@@ -36,13 +36,6 @@ namespace TerranForum.Infrastructure.Services
             return await _PostRepository.CreateAsync(masterPost);
         }
 
-        public async Task<IEnumerable<Post>> GetAllPostsForForum(int forumId) 
-        {
-            var ordering = Ordering<Post>.OrderByDescending(x => x.IsMaster).ThenByDescending(x => x.CreatedAt);
-
-            return await _PostRepository.GetAllAsync(x => x.ForumId == forumId, ordering);
-        }
-
         private IForumRepository _ForumRepository;
         private IPostRepository _PostRepository;
     }

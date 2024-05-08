@@ -38,7 +38,37 @@ namespace TerranForum.Infrastructure.Repositories
             return await forums.ToListAsync();
         }
 
-        public async Task<Forum?> GetByIdAsync(int id) => await _DbContext.Forums.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<Forum?> GetByIdAsync(int id)
+        {
+            return await _DbContext.Forums
+                .Include(f => f.Posts)
+                    .ThenInclude(p => p.User)
+                .Include(f => f.Posts)
+                    .ThenInclude(p => p.Replies)
+                .Select(f => new Forum 
+                {
+                    Id = f.Id,
+                    Title = f.Title,
+                    Posts = f.Posts
+                    .OrderByDescending(p => p.IsMaster)
+                    .ThenByDescending(p => p.CreatedAt)
+                    .Select(p => new Post 
+                    {
+                        Id = p.Id,
+                        Content = p.Content,
+                        UserId = p.UserId,
+                        User = p.User,
+                        CreatedAt = p.CreatedAt,
+                        UpvoteCount = p.UpvoteCount,
+                        DownvoteCount = p.DownvoteCount,
+                        Replies = p.Replies.OrderByDescending(pr => pr.CreatedAt),
+                        ForumId = p.ForumId,
+                        Forum = p.Forum,
+                        IsMaster = p.IsMaster
+                    })
+                })
+                .FirstOrDefaultAsync(f => f.Id == id);
+        }
 
         public async Task<bool> UpdateAsync(Forum forum)
         {

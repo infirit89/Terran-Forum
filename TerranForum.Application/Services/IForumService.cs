@@ -11,6 +11,5 @@ namespace TerranForum.Application.Services
     public interface IForumService
     {
         Task<bool> CreateForumThreadAsync(CreateForumModel createForumModel);
-        Task<IEnumerable<Post>> GetAllPostsForForum(int forumId);
     }
 }
