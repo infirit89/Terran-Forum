@@ -54,22 +54,22 @@ namespace TerranForum.Infrastructure.Services
         public async Task SeedForumAsync()
         {
             _Logger.LogInformation("Seeding forum");
-            Forum? forum = await _ForumRepository.GetByIdAsync(TestForumId);
+            Forum? forum = await _ForumRepository.GetByIdAsync(TestForum.Id);
             if (forum == null) 
             {
                 forum = new Forum()
                 {
-                    Title = TestForum
+                    Title = TestForum.Title
                 };
                 await _ForumRepository.CreateAsync(forum);
             }
 
-            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumMasterPostId)) 
+            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumMasterPost.Id)) 
             {
                 ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
                 Post masterPost = new Post()
                 {
-                    Content = TestForumMasterPost,
+                    Content = TestForumMasterPost.Content,
                     User = user,
                     CreatedAt = DateTime.Now,
                     Forum = forum,
@@ -77,6 +77,21 @@ namespace TerranForum.Infrastructure.Services
                 };
 
                 await _PostRepository.CreateAsync(masterPost);
+            }
+
+            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumPost.Id)) 
+            {
+                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
+                Post post = new Post()
+                {
+                    Content = TestForumPost.Content,
+                    User = user,
+                    CreatedAt = DateTime.Now,
+                    Forum = forum,
+                    IsMaster = false
+                };
+
+                await _PostRepository.CreateAsync(post);
             }
         }
 
@@ -105,9 +120,35 @@ namespace TerranForum.Infrastructure.Services
         private const string TestAdmin = "Admin0";
         private const string TestUser = "User0";
         private const string TestPassword = "Test@T1";
-        private const string TestForum = "Forum0";
-        private const string TestForumMasterPost = "Hello, this is a test post!";
-        private const int TestForumId = 1;
-        private const int TestForumMasterPostId = 1;
+        
+        private struct TestForumData 
+        {
+            public string Title;
+            public int Id;
+        }
+
+        private struct TestForumPostData 
+        {
+            public string Content;
+            public int Id;
+        }
+
+        private TestForumData TestForum = new TestForumData()
+        {
+            Title = "Forum0",
+            Id = 1
+        };
+
+        private TestForumPostData TestForumMasterPost = new TestForumPostData()
+        {
+            Content = "Hello, this is a test post!",
+            Id = 1
+        };
+
+        private TestForumPostData TestForumPost = new TestForumPostData()
+        {
+            Content = "This is a test reply",
+            Id = 2
+        };
     }
 }

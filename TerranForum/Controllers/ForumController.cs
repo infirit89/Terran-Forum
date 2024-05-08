@@ -2,7 +2,9 @@
 using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
+using TerranForum.Application.Utils;
 using TerranForum.Domain.Models;
+using TerranForum.Models;
 
 namespace TerranForum.Controllers
 {
@@ -25,9 +27,26 @@ namespace TerranForum.Controllers
             return View(forums.Forums);
         }
 
-        private IForumService _ForumService;
-        private IForumRepository _ForumRepository;
-        private ILogger<ForumController> _Logger;
+        public async Task<IActionResult> ViewThread(int forumId)
+        {
+            Forum? forum = await _ForumRepository.GetByIdAsync(forumId);
+            if (forum == null)
+                return NotFound();
+
+            IEnumerable<Post> posts = await _ForumService.GetAllPostsForForum(forum.Id);
+
+            ForumThreadViewModel forumThreadViewModel = new ForumThreadViewModel()
+            {
+                Title = forum.Title,
+                Posts = posts
+            };
+
+            return View(forumThreadViewModel);
+        }
+
+        private readonly IForumService _ForumService;
+        private readonly IForumRepository _ForumRepository;
+        private readonly ILogger<ForumController> _Logger;
         private const int _PageSize = 10;
     }
 }

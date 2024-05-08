@@ -1,0 +1,16 @@
+﻿@using TerranForum.Models;
+@model ForumThreadViewModel
+
+@{
+}
+
+<div>
+    <h3>@Model.Title</h3>
+
+    <ul>
+        @foreach (var item in Model.Posts)
+        {
+            <li>@item.Content</li>
+        }
+    </ul>
+</div>

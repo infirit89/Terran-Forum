@@ -11,7 +11,10 @@
     <ul>
         @foreach (var item in Model)
         {
-            <li><a asp-controller="Forum">@item.Title</a></li>
+            <li>
+                <a class="nav-link" asp-controller="Forum"
+                    asp-action="ViewThread" asp-route-forumId="@item.Id">@item.Title</a>
+            </li>
         }
     </ul>
 

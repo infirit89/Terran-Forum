@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 using TerranForum.Application.Repositories;
+using TerranForum.Application.Utils;
 using TerranForum.Domain.Models;
 
 namespace TerranForum.Infrastructure.Repositories
@@ -30,12 +31,17 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.PostReplies.AnyAsync(predicate);
         }
 
-        public async Task<IEnumerable<PostReply>> GetAllAsync(Predicate<PostReply>? predicate = null)
+        public async Task<IEnumerable<PostReply>> GetAllAsync(Expression<Func<PostReply, bool>>? predicate = null, Ordering<PostReply>? ordering = null)
         {
-            if (predicate != null)
-                return await _DbContext.PostReplies.Where(x => predicate(x)).ToListAsync();
+            IQueryable<PostReply> postReplies = _DbContext.PostReplies;
 
-            return await _DbContext.PostReplies.ToListAsync();
+            if (predicate != null)
+                postReplies = postReplies.Where(predicate);
+
+            if (ordering != null)
+                return await ordering.Apply(postReplies).ToListAsync();
+
+            return await postReplies.ToListAsync();
         }
 
         public async Task<PostReply?> GetByIdAsync(int id) => await _DbContext.PostReplies.FirstOrDefaultAsync(x => x.Id == id);
