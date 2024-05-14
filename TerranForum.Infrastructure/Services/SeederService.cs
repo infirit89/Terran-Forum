@@ -117,8 +117,8 @@ namespace TerranForum.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
-        private const string TestAdmin = "Admin0";
-        private const string TestUser = "User0";
+        private const string TestAdmin = "Admin0@mail.com";
+        private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";
         
         private struct TestForumData 

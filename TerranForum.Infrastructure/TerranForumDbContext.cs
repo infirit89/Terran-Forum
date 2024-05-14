@@ -18,7 +18,6 @@ namespace TerranForum.Infrastructure
             : base(options) { }
 
         public override DbSet<ApplicationUser> Users { get; set; }
-
         public virtual DbSet<Forum> Forums { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostReply> PostReplies { get; set; }

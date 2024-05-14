@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using TerranForum.Domain.Models;
 using TerranForum.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace TerranForum
 {
@@ -13,14 +14,19 @@ namespace TerranForum
             string connectionString = builder.Configuration.GetConnectionString("TerranForum") ??
                 throw new NullReferenceException("Connection string was null");
 
+            builder.Services.AddDbContext<TerranForumDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
             // Add services to the container.
-            builder.Services.AddAuthentication();
             builder.Services
-                .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = false)
+                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedEmail = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<TerranForumDbContext>();
 
             builder.Services.AddInfrastructure(connectionString);
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
@@ -36,12 +42,15 @@ namespace TerranForum
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=home}/{action=index}/{id?}");
+
+            app.MapRazorPages();
 
             app.Run();
         }
