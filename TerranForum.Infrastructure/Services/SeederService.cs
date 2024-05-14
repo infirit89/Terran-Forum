@@ -54,44 +54,52 @@ namespace TerranForum.Infrastructure.Services
         public async Task SeedForumAsync()
         {
             _Logger.LogInformation("Seeding forum");
-            Forum? forum = await _ForumRepository.GetByIdAsync(TestForum.Id);
-            if (forum == null) 
+
+            for (int i = 0; i < _TestForums.Count; i++)
             {
-                forum = new Forum()
+                TestForumData testForumData = _TestForums[i];
+
+                Forum? forum = await _ForumRepository.GetByIdAsync(testForumData.Id);
+                if (forum == null) 
                 {
-                    Title = TestForum.Title
-                };
-                await _ForumRepository.CreateAsync(forum);
-            }
+                    forum = new Forum()
+                    {
+                        Title = testForumData.Title
+                    };
+                    await _ForumRepository.CreateAsync(forum);
+                }
 
-            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumMasterPost.Id)) 
-            {
-                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-                Post masterPost = new Post()
+                TestForumPostData masterPostData = _TestForumPosts[i];
+                TestForumPostData replyPostData = _TestForumPosts[i + 1];
+                if (!await _PostRepository.ExsistsAsync(x => x.Id == masterPostData.Id))
                 {
-                    Content = TestForumMasterPost.Content,
-                    User = user,
-                    CreatedAt = DateTime.Now,
-                    Forum = forum,
-                    IsMaster = true
-                };
+                    ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
+                    Post masterPost = new Post()
+                    {
+                        Content = masterPostData.Content,
+                        User = user,
+                        CreatedAt = DateTime.Now,
+                        Forum = forum,
+                        IsMaster = true
+                    };
 
-                await _PostRepository.CreateAsync(masterPost);
-            }
+                    await _PostRepository.CreateAsync(masterPost);
+                }
 
-            if (!await _PostRepository.ExsistsAsync(x => x.Id == TestForumPost.Id)) 
-            {
-                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-                Post post = new Post()
+                if (!await _PostRepository.ExsistsAsync(x => x.Id == replyPostData.Id))
                 {
-                    Content = TestForumPost.Content,
-                    User = user,
-                    CreatedAt = DateTime.Now,
-                    Forum = forum,
-                    IsMaster = false
-                };
+                    ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
+                    Post post = new Post()
+                    {
+                        Content = replyPostData.Content,
+                        User = user,
+                        CreatedAt = DateTime.Now,
+                        Forum = forum,
+                        IsMaster = false
+                    };
 
-                await _PostRepository.CreateAsync(post);
+                    await _PostRepository.CreateAsync(post);
+                }
             }
         }
 
@@ -133,22 +141,42 @@ namespace TerranForum.Infrastructure.Services
             public int Id;
         }
 
-        private TestForumData TestForum = new TestForumData()
+        private List<TestForumData> _TestForums = new List<TestForumData>() 
         {
-            Title = "Forum0",
-            Id = 1
+            new TestForumData() 
+            {
+                Title = "Forum0",
+                Id = 1
+            },
+            new TestForumData() 
+            {
+                Title = "Forum1",
+                Id = 2
+            }
         };
 
-        private TestForumPostData TestForumMasterPost = new TestForumPostData()
+        private List<TestForumPostData> _TestForumPosts = new List<TestForumPostData>()
         {
-            Content = "Hello, this is a test post!",
-            Id = 1
-        };
-
-        private TestForumPostData TestForumPost = new TestForumPostData()
-        {
-            Content = "This is a test reply",
-            Id = 2
+            new TestForumPostData() 
+            {
+                Content = "Hello, this is a test post!",
+                Id = 1
+            },
+            new TestForumPostData()
+            {
+                Content = "This is a test reply",
+                Id = 2
+            },
+            new TestForumPostData()
+            {
+                Content = "Hello, this is a second test post!",
+                Id = 3
+            },
+            new TestForumPostData()
+            {
+                Content = "This is a second test reply",
+                Id = 4
+            },
         };
     }
 }

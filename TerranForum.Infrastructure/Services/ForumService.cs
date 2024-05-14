@@ -14,7 +14,7 @@ namespace TerranForum.Infrastructure.Services
             _PostRepository = postRepository;
         }
 
-        public async Task<bool> CreateForumThreadAsync(CreateForumModel createForumModel)
+        public async Task<Forum?> CreateForumThreadAsync(CreateForumModel createForumModel)
         {
             Forum forum = new Forum()
             {
@@ -22,7 +22,7 @@ namespace TerranForum.Infrastructure.Services
             };
 
             if (!await _ForumRepository.CreateAsync(forum))
-                return false;
+                return null;
 
             Post masterPost = new Post()
             {
@@ -33,7 +33,7 @@ namespace TerranForum.Infrastructure.Services
                 CreatedAt = DateTime.Now
             };
 
-            return await _PostRepository.CreateAsync(masterPost);
+            return await _PostRepository.CreateAsync(masterPost) ? forum : null;
         }
 
         private IForumRepository _ForumRepository;

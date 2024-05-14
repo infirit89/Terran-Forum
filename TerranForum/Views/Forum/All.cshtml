@@ -8,38 +8,59 @@
 }
 
 <div>
-    <ul>
-        @foreach (var item in Model)
-        {
-            <li>
-                <a class="nav-link" asp-controller="Forum"
-                    asp-action="ViewThread" asp-route-forumId="@item.Id">@item.Title</a>
-            </li>
-        }
-    </ul>
 
-    <form method="get" asp-controller="Forum" asp-action="All">
-        <input name="page" value="@(previousPage)" hidden />
-        @if (previousPage > 0)
-        {
-            <input type="submit" value="Previous"/>
-        }
-        else
-        {
-            <input type="submit" value="Previous" disabled/>
-        }
+    <form method="get" asp-controller="Forum" asp-action="Create">
+        <input type="submit" value="Create" />
     </form>
 
-    <form method="get" asp-controller="Forum" asp-action="All">
-        <input name="page" value="@(nextPage)" hidden />
+    <table class="table table-hover">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="container">
+                            <a class="forum-title mb-0 pl-0" asp-controller="Forum"
+                                asp-action="ViewThread" asp-route-forumId="@item.Id">
+                                @item.Title
+                                <p>some category</p>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-        @if (nextPage < pageCount - 1)
-        {
-            <input type="submit" value="Next"/>
-        }
-        else
-        {
-            <input type="submit" value="Next" disabled/>
-        }
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-1">
+                <form class="page-form" method="get" asp-controller="Forum" asp-action="All">
+                    <input name="page" value="@(previousPage)" hidden />
+                    @if (previousPage > 0)
+                    {
+                        <input type="submit" value="Previous"/>
+                    }
+                    else
+                    {
+                        <input type="submit" value="Previous" disabled/>
+                    }
+                </form>
+            </div>
+            <div class="col-sm-1">
+                <form method="get" asp-controller="Forum" asp-action="All">
+                    <input name="page" value="@(nextPage)" hidden />
+
+                    @if (nextPage < pageCount - 1)
+                    {
+                        <input type="submit" value="Next"/>
+                    }
+                    else
+                    {
+                        <input type="submit" value="Next" disabled/>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

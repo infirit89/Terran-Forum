@@ -28,6 +28,7 @@
     --background-800: hsl(216, 37%, 20%);
     --background-900: hsl(215, 37%, 10%);
     --background-950: hsl(213, 36%, 5%);
+
     --primary-50: hsl(213, 36%, 95%);
     --primary-100: hsl(215, 37%, 90%);
     --primary-200: hsl(215, 37%, 80%);
@@ -96,6 +97,12 @@ nav {
 
 .nav-link {
     font-size: medium;
+    color: var(--text-color);
+}
+
+.nav-link:hover {
+    color: var(--text-200);
+/*    opacity: 1;*/
 }
 
 .navbar-brand {
@@ -122,4 +129,28 @@ a {
 
 footer {
     background-color: var(--text-950);
+}
+
+.table {
+    background-color: var(--background-color);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+p {
+    color: var(--text-color);
+}
+
+.forum-title {
+    display: block;
+    text-decoration: none;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.forum-title:hover {
+/*    color: var(--text-200);*/
+    color: var(--text-color);
+}
+
+.col-sm-1 {
+    padding-right: 0px;
 }
