@@ -1,23 +1,47 @@
 ﻿@using TerranForum.Models;
+@using TerranForum.Domain.Models;
 @model ForumThreadViewModel
 
 @{
+    Post masterPost = Model.Posts.First();
+    IEnumerable<Post> answers = Model.Posts.Skip(1);
 }
 
-<div class="py-4">
+<div class="container">
     <h3>@Model.Title</h3>
+    <hr />
 
-    <ul>
-        @foreach (var item in Model.Posts)
-        {
-            @if (item.IsMaster)
+    <div class="container pb-4">
+        <div class="container">
+            @foreach (var paragraph in masterPost.Content.Split("\r\n\r\n"))
             {
-                <li>Master: @item.Content</li>
+                <p>@paragraph</p>
             }
-            else
+            <div class="container-fluid">
+                <div class="d-flex justify-content-end">
+                    @masterPost.User.UserName
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h5>Replies: @answers.Count()</h5>
+            @foreach (var post in answers)
             {
-                <li>@item.Content</li>
+                <div class="container pt-4">
+                    @foreach (var paragraph in post.Content.Split("\r\n\r\n"))
+                    {
+                        <p>@paragraph</p>
+                    }
+
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-end">
+                            @masterPost.User.UserName
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-1"/>
             }
-        }
-    </ul>
+        </div>
+    </div>
 </div>
