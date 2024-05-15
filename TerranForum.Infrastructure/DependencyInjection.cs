@@ -25,6 +25,8 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IPostReplyRepository, PostReplyRepository>();
 
             services.AddScoped<IForumService, ForumService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IPostReplyService, PostReplyService>();
 
             services.AddTransient<ISeederService, SeederService>();
             services.AddHostedService<HostedSeederService>();

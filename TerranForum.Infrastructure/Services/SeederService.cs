@@ -8,6 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using TerranForum.Application.Dtos;
+using TerranForum.Application.Dtos.ForumDtos;
+using TerranForum.Application.Dtos.PostReplyDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Enums;
@@ -22,7 +25,11 @@ namespace TerranForum.Infrastructure.Services
             IUserStore<ApplicationUser> userStore, 
             UserManager<ApplicationUser> userManager,
             IPostRepository postRepository,
-            IForumRepository forumRepository)
+            IForumRepository forumRepository,
+            IForumService forumService,
+            IPostService postService,
+            IPostReplyRepository postReplyRepository,
+            IPostReplyService postReplyService)
         {
             _Logger = logger;
             _RoleManager = roleManager;
@@ -30,6 +37,10 @@ namespace TerranForum.Infrastructure.Services
             _UserManager = userManager;
             _PostRepository = postRepository;
             _ForumRepository = forumRepository;
+            _ForumService = forumService;
+            _PostService = postService;
+            _PostReplyRepository = postReplyRepository;
+            _PostReplyService = postReplyService;
         }
 
         public async Task SeedRolesAsync()
@@ -58,47 +69,48 @@ namespace TerranForum.Infrastructure.Services
             for (int i = 0; i < _TestForums.Count; i++)
             {
                 TestForumData testForumData = _TestForums[i];
+                TestForumPostData masterPostData = _TestForumPosts[i * 3];
+                TestForumPostData answerPostData = _TestForumPosts[i * 3 + 1];
+                TestForumPostData replyPostData = _TestForumPosts[i * 3 + 2];
+                ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
 
                 Forum? forum = await _ForumRepository.GetByIdAsync(testForumData.Id);
+
                 if (forum == null) 
                 {
-                    forum = new Forum()
+                    CreateForumModel createForumModel = new() 
                     {
-                        Title = testForumData.Title
-                    };
-                    await _ForumRepository.CreateAsync(forum);
-                }
-
-                TestForumPostData masterPostData = _TestForumPosts[i];
-                TestForumPostData replyPostData = _TestForumPosts[i + 1];
-                if (!await _PostRepository.ExsistsAsync(x => x.Id == masterPostData.Id))
-                {
-                    ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-                    Post masterPost = new Post()
-                    {
+                        Title = testForumData.Title,
                         Content = masterPostData.Content,
-                        User = user,
-                        CreatedAt = DateTime.Now,
-                        Forum = forum,
-                        IsMaster = true
+                        UserId = user.Id
                     };
+                    forum = await _ForumService.CreateForumThreadAsync(createForumModel);
+                    if(forum == null)
+                    {
+                        _Logger.LogCritical("Couldn't seed forum");
+                        return;
+                    }
 
-                    await _PostRepository.CreateAsync(masterPost);
-                }
-
-                if (!await _PostRepository.ExsistsAsync(x => x.Id == replyPostData.Id))
-                {
-                    ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
-                    Post post = new Post()
+                    Post masterPost = forum.Posts.First();
+                    CreatePostReplyModel createPostReplyModel = new()
                     {
                         Content = replyPostData.Content,
                         User = user,
-                        CreatedAt = DateTime.Now,
-                        Forum = forum,
-                        IsMaster = false
+                        Post = masterPost
+                    };
+                    await _PostReplyService.AddPostReply(createPostReplyModel);
+                }
+
+                if (!await _PostRepository.ExsistsAsync(x => x.Id == answerPostData.Id))
+                {
+                    CreatePostModel createPostModel = new() 
+                    {
+                        Content = answerPostData.Content,
+                        User = user,
+                        Forum = forum!
                     };
 
-                    await _PostRepository.CreateAsync(post);
+                    await _PostService.AddPostToThread(createPostModel);
                 }
             }
         }
@@ -120,11 +132,15 @@ namespace TerranForum.Infrastructure.Services
         }
 
         private readonly ILogger<SeederService> _Logger;
+        private readonly IForumService _ForumService;
+        private readonly IPostService _PostService;
+        private readonly IPostReplyService _PostReplyService;
         private readonly RoleManager<IdentityRole> _RoleManager;
         private readonly IUserStore<ApplicationUser> _UserStore;
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
+        private readonly IPostReplyRepository _PostReplyRepository;
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";
@@ -164,8 +180,13 @@ namespace TerranForum.Infrastructure.Services
             },
             new TestForumPostData()
             {
-                Content = "This is a test reply",
+                Content = "This is a test answer",
                 Id = 2
+            },
+            new TestForumPostData()
+            {
+                Content = "This is a test reply",
+                Id = 1
             },
             new TestForumPostData()
             {
@@ -174,9 +195,14 @@ namespace TerranForum.Infrastructure.Services
             },
             new TestForumPostData()
             {
-                Content = "This is a second test reply",
+                Content = "This is a second test answer",
                 Id = 4
             },
+            new TestForumPostData() 
+            {
+                Content = "This is a second test reply",
+                Id = 2
+            }
         };
     }
 }
