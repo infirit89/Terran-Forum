@@ -1,0 +1,16 @@
+﻿@model CreatePostCommentViewModel
+@{
+}
+
+<div class="container pb-2">
+<form method="post" asp-controller="Post" asp-action="AddComment">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-floating pb-1">
+        <input asp-for="Content" type="text" /> <br />
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Add Comment"/>
+    <a href="#" class="replyAchor" id="cancelReply">Cancel</a>
+    <input asp-for="PostId" name="postId" type="hidden"/>
+</form>
+</div>

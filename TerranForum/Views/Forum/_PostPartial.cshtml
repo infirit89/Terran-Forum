@@ -1,5 +1,6 @@
 ﻿@using TerranForum.Domain.Models
 @using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
 @model Post
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -23,18 +24,10 @@
             <p>@reply.Content</p>
         </div>
     }
-    <div>
+    <div id="createReply">
         @if (SignInManager.IsSignedIn(User))
         {
-            <a href="#" class="replyAchor" id="addReply">Add Comment</a>
-
-            <div class="container invisible">
-                <form method="post" asp-route-postId="@Model.Id" asp-controller="Post" asp-action="AddComment">
-                    <input name="content" type="text" />
-                    <a href="#" class="replyAchor" id="cancelReply">Cancel</a>
-                    <input type="submit" value="Add Comment"/>
-                </form>
-            </div>
+            <a href="#" class="replyAchor" postId="@Model.Id" id="addReply">Add Comment</a>
         }
         else
         {

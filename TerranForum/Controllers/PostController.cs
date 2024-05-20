@@ -17,7 +17,6 @@ namespace TerranForum.Controllers
         [HttpPost, Authorize]
         public IActionResult AddComment(CreatePostCommentViewModel createPostCommentViewModel) 
         {
-            createPostCommentViewModel.UserId = _UserManager.GetUserId(User);
             if (!ModelState.IsValid)
             {
                 _Logger.LogError("Invalid create model");
@@ -28,6 +27,16 @@ namespace TerranForum.Controllers
             _Logger.LogTrace(createPostCommentViewModel.PostId.ToString());
 
             return View();
+        }
+
+        public IActionResult GetCreatePostReplyView(int postId) 
+        {
+            return PartialView(
+                "~/Views/PostReply/_CreatePostReplyPartial.cshtml",
+                new CreatePostCommentViewModel()
+                {
+                    PostId = postId
+                });
         }
 
         public IActionResult Index()

@@ -1,29 +1,36 @@
-﻿(function setup() {
-	const invisibleClass = 'invisible';
+﻿const hiddenAttribute = 'hidden';
+const uri = "../Post/GetCreatePostReplyView";
+let previousCreateReplyContainer = null;
+
+(function setup() {
+	const createReplyContainers = document.querySelectorAll('#createReply');
+	const parser = new DOMParser();
+
 	const addReplyButtons = document.querySelectorAll('#addReply');
 	for (const addReplyButton of addReplyButtons) {
 		addReplyButton.addEventListener('click', e => {
-			const replyContainer = addReplyButton.parentElement.querySelector('div');
+			const createReplyContainer = addReplyButton.parentElement;
 
-			if (replyContainer.classList.contains(invisibleClass))
-				replyContainer.classList.remove(invisibleClass);
+			fetch(`${uri}?postId=${addReplyButton.getAttribute("postId")}`)
+				.then(response => response.text())
+				.then(responseText => {
+					const parsedDom = parser.parseFromString(responseText, "text/html");
+					createReplyContainer.appendChild(parsedDom.querySelector('div'));
 
-			if(!addReplyButton.classList.contains(invisibleClass))
-				addReplyButton.classList.add(invisibleClass);
-		});
-	}
+					const cancelReplyButton = createReplyContainer
+						.lastElementChild
+						.querySelector('#cancelReply');
 
-	const cancelReplyButtons = document.querySelectorAll('#cancelReply');
-	for (const cancelReplyButton of cancelReplyButtons) {
-		cancelReplyButton.addEventListener('click', e => {
-			const replyContainer = cancelReplyButton.parentElement.parentElement;
-			const addReplyButton = replyContainer.parentElement.querySelector('#addReply');
+					cancelReplyButton.addEventListener('click', e => {
+						createReplyContainer.removeChild(createReplyContainer.lastChild);
+					});
 
-			if (!replyContainer.classList.contains(invisibleClass))
-				replyContainer.classList.add(invisibleClass);
+					if (previousCreateReplyContainer != null && previousCreateReplyContainer != createReplyContainer)
+						previousCreateReplyContainer.removeChild(previousCreateReplyContainer.lastChild);
 
-			if (addReplyButton.classList.contains(invisibleClass))
-				addReplyButton.classList.remove(invisibleClass);
+					previousCreateReplyContainer = createReplyContainer;
+				})
+				.catch(error => console.error(error));
 		});
 	}
 })();
