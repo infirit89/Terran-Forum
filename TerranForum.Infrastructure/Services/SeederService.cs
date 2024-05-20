@@ -95,8 +95,8 @@ namespace TerranForum.Infrastructure.Services
                     CreatePostReplyModel createPostReplyModel = new()
                     {
                         Content = replyPostData.Content,
-                        User = user,
-                        Post = masterPost
+                        UserId = user.Id,
+                        PostId = masterPost.Id
                     };
                     await _PostReplyService.AddPostReply(createPostReplyModel);
                 }

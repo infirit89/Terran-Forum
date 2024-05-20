@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TerranForum.Application.Dtos.PostReplyDtos;
+using TerranForum.Application.Repositories;
+using TerranForum.Application.Services;
 using TerranForum.Domain.Models;
 using TerranForum.Models;
 
@@ -8,14 +11,20 @@ namespace TerranForum.Controllers
 {
     public class PostController : Controller
     {
-        public PostController(ILogger<PostController> logger, UserManager<ApplicationUser> userManager)
+        public PostController(
+            ILogger<PostController> logger,
+            UserManager<ApplicationUser> userManager,
+            IPostReplyService postReplyService,
+            IPostRepository postRepository)
         {
             _Logger = logger;
             _UserManager = userManager;
+            _PostReplyService = postReplyService;
+            _PostRepository = postRepository;
         }
 
         [HttpPost, Authorize]
-        public IActionResult AddComment(CreatePostCommentViewModel createPostCommentViewModel) 
+        public async Task<IActionResult> AddComment(CreatePostCommentViewModel createPostCommentViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -23,10 +32,26 @@ namespace TerranForum.Controllers
                 return ValidationProblem();
             }
 
-            _Logger.LogTrace(createPostCommentViewModel.Content);
-            _Logger.LogTrace(createPostCommentViewModel.PostId.ToString());
+            Post? post = await _PostRepository.GetByIdAsync(createPostCommentViewModel.PostId);
 
-            return View();
+            if (post == null) 
+            {
+                _Logger.LogError("Invalid post");
+                return StatusCode(500);
+            }
+
+            await _PostReplyService.AddPostReply(new()
+            {
+                Content = createPostCommentViewModel.Content,
+                UserId = _UserManager.GetUserId(User),
+                PostId = createPostCommentViewModel.PostId
+            });
+
+
+            return RedirectToAction("ViewThread", "Forum", new
+            {
+                forumId = post.ForumId
+            });
         }
 
         public IActionResult GetCreatePostReplyView(int postId) 
@@ -46,5 +71,7 @@ namespace TerranForum.Controllers
 
         private readonly ILogger<PostController> _Logger;
         private readonly UserManager<ApplicationUser> _UserManager;
+        private readonly IPostReplyService _PostReplyService;
+        private readonly IPostRepository _PostRepository;
     }
 }

@@ -8,8 +8,8 @@ namespace TerranForum.Application.Dtos.PostReplyDtos
         [Required, MinLength(5)]
         public string Content { get; set; } = null!;
         [Required]
-        public ApplicationUser User { get; set; } = null!;
+        public string UserId { get; set; } = null!;
         [Required]
-        public Post Post { get; set; } = null!;
+        public int PostId { get; set; }
     }
 }

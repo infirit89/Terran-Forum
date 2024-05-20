@@ -18,8 +18,8 @@ namespace TerranForum.Infrastructure.Services
             {
                 Content = createPostReplyModel.Content,
                 CreatedAt = DateTime.Now,
-                User = createPostReplyModel.User,
-                Post = createPostReplyModel.Post
+                UserId = createPostReplyModel.UserId,
+                PostId = createPostReplyModel.PostId
             };
 
             return await _PostReplyRepository.CreateAsync(postReply) ? postReply : null;

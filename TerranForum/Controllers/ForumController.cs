@@ -70,7 +70,7 @@ namespace TerranForum.Controllers
                 return Problem("Couldn't create forum");
             }
 
-            return RedirectToAction("ViewThread", "Forum", new 
+            return RedirectToAction("ViewThread", "Forum", new
             {
                 forumId = forum.Id 
             });
