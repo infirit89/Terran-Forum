@@ -1,0 +1,11 @@
+﻿@import "colors.css";
+
+.replyAchor {
+	text-decoration: none;
+	padding: .5rem 1rem;
+	color: var(--text-color);
+}
+
+.replyAchor:hover {
+	color: var(--text-200);
+}

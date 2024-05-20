@@ -10,6 +10,8 @@
     IEnumerable<Post> answers = Model.Posts.Skip(1);
 }
 
+<link href="~/css/page-viewthread.css" rel="stylesheet"/>
+
 <div class="container">
     <h3>@Model.Title</h3>
     <hr />
@@ -34,4 +36,6 @@
             }
         </div>
     </div>
+
+    <script src="~/js/viewthread.js"></script>
 </div>

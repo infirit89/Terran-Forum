@@ -23,16 +23,22 @@
             <p>@reply.Content</p>
         </div>
     }
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <a class="nav-link" id="addReply">Add Reply</a>
-    }
-    else
-    {
-        <a class="nav-link" id="addReply" asp-area="Identity" asp-page="/Account/Login">Add Reply</a>
-    }
+    <div>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a href="#" class="replyAchor" id="addReply">Add Comment</a>
 
-    <div class="container invisible">
-        <input type="text" />
+            <div class="container invisible">
+                <form method="post" asp-route-postId="@Model.Id" asp-controller="Post" asp-action="AddComment">
+                    <input name="content" type="text" />
+                    <a href="#" class="replyAchor" id="cancelReply">Cancel</a>
+                    <input type="submit" value="Add Comment"/>
+                </form>
+            </div>
+        }
+        else
+        {
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Add Comment</a>
+        }
     </div>
 </div>
