@@ -1,0 +1,10 @@
+﻿@using TerranForum.Domain.Models
+@model Forum
+
+<div class="container">
+    <a class="forum-title mb-0 pl-0" asp-controller="Forum"
+       asp-action="ViewThread" asp-route-forumId="@Model.Id">
+        @Model.Title
+        <p>some category</p>
+    </a>
+</div>

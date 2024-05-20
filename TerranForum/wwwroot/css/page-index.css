@@ -1,0 +1,8 @@
+﻿section {
+	background-image: url("../images/terran-scene01.png");
+	width: 100%;
+	height: 100%;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	min-height: 65vh;
+}

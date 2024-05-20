@@ -1,0 +1,38 @@
+﻿@using TerranForum.Domain.Models
+@using Microsoft.AspNetCore.Identity
+@model Post
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+}
+
+@foreach (var paragraph in Model.Content.Split("\r\n\r\n"))
+{
+    <p>@paragraph</p>
+}
+<div class="container-fluid">
+    <div class="d-flex justify-content-end">
+        @Model.User.UserName
+    </div>
+</div>
+<div class="container">
+    @foreach (var reply in Model.Replies)
+    {
+        <div class="container">
+            <p>@reply.Content</p>
+        </div>
+    }
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a class="nav-link" id="addReply">Add Reply</a>
+    }
+    else
+    {
+        <a class="nav-link" id="addReply" asp-area="Identity" asp-page="/Account/Login">Add Reply</a>
+    }
+
+    <div class="container invisible">
+        <input type="text" />
+    </div>
+</div>

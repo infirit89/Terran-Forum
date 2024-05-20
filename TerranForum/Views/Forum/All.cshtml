@@ -15,17 +15,13 @@
 
     <table class="table table-hover">
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var forum in Model)
             {
                 <tr>
                     <td>
-                        <div class="container">
-                            <a class="forum-title mb-0 pl-0" asp-controller="Forum"
-                                asp-action="ViewThread" asp-route-forumId="@item.Id">
-                                @item.Title
-                                <p>some category</p>
-                            </a>
-                        </div>
+                        @{
+                            await Html.RenderPartialAsync("_ForumPartial", forum);
+                        }
                     </td>
                 </tr>
             }
