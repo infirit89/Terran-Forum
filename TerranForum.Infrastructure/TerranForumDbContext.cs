@@ -17,15 +17,19 @@ namespace TerranForum.Infrastructure
         public TerranForumDbContext(DbContextOptions<TerranForumDbContext> options)
             : base(options) { }
 
-        public override DbSet<ApplicationUser> Users { get; set; }
-        public virtual DbSet<Forum> Forums { get; set; }
-        public virtual DbSet<Post> Posts { get; set; }
-        public virtual DbSet<PostReply> PostReplies { get; set; }
+        public override DbSet<ApplicationUser> Users { get; set; } = null!;
+        public virtual DbSet<Forum> Forums { get; set; } = null!;
+        public virtual DbSet<Post> Posts { get; set; } = null!;
+        public virtual DbSet<Rating<Post>> PostRatings { get; set; } = null!;
+        public virtual DbSet<PostReply> PostReplies { get; set; } = null!;
+        public virtual DbSet<Rating<PostReply>> PostReplyRatings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder) 
         {
             Assembly configurationsAssembly = Assembly.GetExecutingAssembly();
             builder.ApplyConfigurationsFromAssembly(configurationsAssembly);
+
+
 
             base.OnModelCreating(builder);
         }

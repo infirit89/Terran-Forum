@@ -1,5 +1,4 @@
-﻿const hiddenAttribute = 'hidden';
-const uri = "../Post/GetCreatePostReplyView";
+﻿const uri = "../Post/GetCreatePostReplyView";
 let previousCreateReplyContainer = null;
 
 (function setup() {

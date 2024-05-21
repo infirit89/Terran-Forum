@@ -59,8 +59,6 @@ namespace TerranForum.Infrastructure.Repositories
                         UserId = p.UserId,
                         User = p.User,
                         CreatedAt = p.CreatedAt,
-                        UpvoteCount = p.UpvoteCount,
-                        DownvoteCount = p.DownvoteCount,
                         Replies = p.Replies.OrderByDescending(pr => pr.CreatedAt),
                         ForumId = p.ForumId,
                         Forum = p.Forum,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TerranForum.Domain.Models
 {
-    public class PostReply
+    public class PostReply : ILikeble
     {
         public int Id { get; set; }
 
@@ -22,5 +22,7 @@ namespace TerranForum.Domain.Models
         [Required]
         public int PostId { get; set; }
         public virtual Post Post { get; set; } = null!;
+
+        public virtual IEnumerable<Rating<PostReply>> Ratings { get; set; } = new List<Rating<PostReply>>();
     }
 }

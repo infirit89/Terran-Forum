@@ -102,10 +102,12 @@ namespace TerranForum.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -142,10 +144,12 @@ namespace TerranForum.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -252,17 +256,11 @@ namespace TerranForum.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("DownvoteCount")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("ForumId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsMaster")
                         .HasColumnType("bit");
-
-                    b.Property<long>("UpvoteCount")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -306,6 +304,42 @@ namespace TerranForum.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PostReplies");
+                });
+
+            modelBuilder.Entity("TerranForum.Domain.Models.Rating<TerranForum.Domain.Models.Post>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<short>("Value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("UserId", "ServiceId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("PostRatings");
+                });
+
+            modelBuilder.Entity("TerranForum.Domain.Models.Rating<TerranForum.Domain.Models.PostReply>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<short>("Value")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("UserId", "ServiceId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("PostReplyRatings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -397,11 +431,53 @@ namespace TerranForum.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TerranForum.Domain.Models.Rating<TerranForum.Domain.Models.Post>", b =>
+                {
+                    b.HasOne("TerranForum.Domain.Models.Post", "Service")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TerranForum.Domain.Models.ApplicationUser", "User")
+                        .WithMany("PostsRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TerranForum.Domain.Models.Rating<TerranForum.Domain.Models.PostReply>", b =>
+                {
+                    b.HasOne("TerranForum.Domain.Models.PostReply", "Service")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TerranForum.Domain.Models.ApplicationUser", "User")
+                        .WithMany("PostReplyRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TerranForum.Domain.Models.ApplicationUser", b =>
                 {
                     b.Navigation("PostReplies");
 
+                    b.Navigation("PostReplyRatings");
+
                     b.Navigation("Posts");
+
+                    b.Navigation("PostsRatings");
                 });
 
             modelBuilder.Entity("TerranForum.Domain.Models.Forum", b =>
@@ -411,7 +487,14 @@ namespace TerranForum.Infrastructure.Migrations
 
             modelBuilder.Entity("TerranForum.Domain.Models.Post", b =>
                 {
+                    b.Navigation("Ratings");
+
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("TerranForum.Domain.Models.PostReply", b =>
+                {
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TerranForum.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class addedratingtable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -107,8 +107,8 @@ namespace TerranForum.Infrastructure.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -152,8 +152,8 @@ namespace TerranForum.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -176,8 +176,6 @@ namespace TerranForum.Infrastructure.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpvoteCount = table.Column<long>(type: "bigint", nullable: false),
-                    DownvoteCount = table.Column<long>(type: "bigint", nullable: false),
                     ForumId = table.Column<int>(type: "int", nullable: false),
                     IsMaster = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -194,6 +192,31 @@ namespace TerranForum.Infrastructure.Migrations
                         name: "FK_Posts_Forums_ForumId",
                         column: x => x.ForumId,
                         principalTable: "Forums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostRatings",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<short>(type: "smallint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostRatings", x => new { x.UserId, x.ServiceId });
+                    table.ForeignKey(
+                        name: "FK_PostRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PostRatings_Posts_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -222,6 +245,31 @@ namespace TerranForum.Infrastructure.Migrations
                         name: "FK_PostReplies_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostReplyRatings",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<short>(type: "smallint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostReplyRatings", x => new { x.UserId, x.ServiceId });
+                    table.ForeignKey(
+                        name: "FK_PostReplyRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PostReplyRatings_PostReplies_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "PostReplies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -266,6 +314,11 @@ namespace TerranForum.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PostRatings_ServiceId",
+                table: "PostRatings",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostReplies_PostId",
                 table: "PostReplies",
                 column: "PostId");
@@ -274,6 +327,11 @@ namespace TerranForum.Infrastructure.Migrations
                 name: "IX_PostReplies_UserId",
                 table: "PostReplies",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReplyRatings_ServiceId",
+                table: "PostReplyRatings",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ForumId",
@@ -304,10 +362,16 @@ namespace TerranForum.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PostReplies");
+                name: "PostRatings");
+
+            migrationBuilder.DropTable(
+                name: "PostReplyRatings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "PostReplies");
 
             migrationBuilder.DropTable(
                 name: "Posts");
