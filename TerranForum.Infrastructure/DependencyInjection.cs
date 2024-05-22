@@ -23,6 +23,7 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IForumRepository, ForumRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostReplyRepository, PostReplyRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IPostService, PostService>();

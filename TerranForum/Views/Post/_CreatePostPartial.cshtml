@@ -1,0 +1,14 @@
+﻿@model CreatePostViewModel
+
+@{
+}
+
+<form asp-controller="Post" asp-action="CreatePost">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-floating pb-1">
+        <textarea rows="8" asp-for="Content" type="text"></textarea> <br />
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Post Answer" />
+    <input asp-for="ForumId" name="forumId" type="hidden" />
+</form>

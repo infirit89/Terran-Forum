@@ -9,8 +9,10 @@
         <input asp-for="Content" type="text" /> <br />
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
+
     <input type="submit" value="Add Comment"/>
     <a href="#" class="replyAchor" id="cancelReply">Cancel</a>
     <input asp-for="PostId" name="postId" type="hidden"/>
+    <input asp-for="ForumId" name="forumId" type="hidden"/>
 </form>
 </div>

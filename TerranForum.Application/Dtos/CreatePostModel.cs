@@ -8,8 +8,8 @@ namespace TerranForum.Application.Dtos
         [Required, MinLength(5)]
         public string Content { get; set; } = null!;
         [Required]
-        public Forum Forum { get; set; } = null!;
+        public int ForumId { get; set; }
         [Required]
-        public ApplicationUser User { get; set; } = null!;
+        public string UserId { get; set; } = null!;
     }
 }

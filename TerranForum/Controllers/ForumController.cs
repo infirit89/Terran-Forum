@@ -41,6 +41,7 @@ namespace TerranForum.Controllers
 
             ForumThreadViewModel forumThreadViewModel = new ForumThreadViewModel()
             {
+                Id = forumId,
                 Title = forum.Title,
                 Posts = forum.Posts
             };

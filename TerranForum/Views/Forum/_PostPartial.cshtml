@@ -27,7 +27,7 @@
     <div id="createReply">
         @if (SignInManager.IsSignedIn(User))
         {
-            <a href="#" class="replyAchor" postId="@Model.Id" id="addReply">Add Comment</a>
+            <a href="#" class="replyAchor" postId="@Model.Id" forumId="@Model.ForumId" id="addReply">Add Comment</a>
         }
         else
         {

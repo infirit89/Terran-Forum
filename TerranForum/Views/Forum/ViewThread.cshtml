@@ -35,6 +35,22 @@
                 <hr class="mt-1"/>
             }
         </div>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="container">
+                <h4>Your answer</h4>
+            
+                @{
+                    await Html.RenderPartialAsync(
+                        "~/Views/Post/_CreatePostPartial.cshtml",
+                        new CreatePostViewModel
+                        {
+                            ForumId = Model.Id
+                        });
+                }
+            </div>
+        }
     </div>
 
 </div>

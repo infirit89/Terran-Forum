@@ -1,13 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using TerranForum.Application.Dtos;
 using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Dtos.PostReplyDtos;
@@ -76,7 +68,7 @@ namespace TerranForum.Infrastructure.Services
 
                 Forum? forum = await _ForumRepository.GetByIdAsync(testForumData.Id);
 
-                if (forum == null) 
+                if (forum == null)
                 {
                     CreateForumModel createForumModel = new() 
                     {
@@ -106,8 +98,8 @@ namespace TerranForum.Infrastructure.Services
                     CreatePostModel createPostModel = new() 
                     {
                         Content = answerPostData.Content,
-                        User = user,
-                        Forum = forum!
+                        UserId = user.Id,
+                        ForumId = forum!.Id
                     };
 
                     await _PostService.AddPostToThread(createPostModel);

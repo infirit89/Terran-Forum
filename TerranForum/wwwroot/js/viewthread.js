@@ -9,8 +9,10 @@ let previousCreateReplyContainer = null;
 	for (const addReplyButton of addReplyButtons) {
 		addReplyButton.addEventListener('click', e => {
 			const createReplyContainer = addReplyButton.parentElement;
+			const postId = addReplyButton.getAttribute("postId");
+			const forumId = addReplyButton.getAttribute("forumId");
 
-			fetch(`${uri}?postId=${addReplyButton.getAttribute("postId")}`)
+			fetch(`${uri}?forumId=${forumId}&postId=${postId}`)
 				.then(response => response.text())
 				.then(responseText => {
 					const parsedDom = parser.parseFromString(responseText, "text/html");

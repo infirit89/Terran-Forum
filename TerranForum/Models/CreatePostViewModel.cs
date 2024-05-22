@@ -2,14 +2,12 @@
 
 namespace TerranForum.Models
 {
-    public class CreatePostCommentViewModel
+    public class CreatePostViewModel
     {
         [Required]
         [Display(Name = "comment")]
-        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
+        [StringLength(400, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 10)]
         public string Content { get; set; } = null!;
-        [Required]
-        public int PostId { get; set; }
         [Required]
         public int ForumId { get; set; }
     }

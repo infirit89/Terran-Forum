@@ -5,6 +5,6 @@ namespace TerranForum.Application.Services
 {
     public interface IPostService
     {
-        Task<Post?> AddPostToThread(CreatePostModel createPostModel);
+        Task<Post> AddPostToThread(CreatePostModel createPostModel);
     }
 }

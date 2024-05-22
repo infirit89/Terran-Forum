@@ -89,3 +89,8 @@ p {
 .col-sm-1 {
     padding-right: 0px;
 }
+
+textarea {
+    width: 100%;
+    resize: vertical;
+}
