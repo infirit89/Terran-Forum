@@ -1,28 +1,35 @@
 ﻿using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
-using TerranForum.Application.Utils;
 using TerranForum.Domain.Models;
+using TerranForum.Domain.Exceptions;
 
 namespace TerranForum.Infrastructure.Services
 {
     internal class ForumService : IForumService
     {
-        public ForumService(IForumRepository forumRepository, IPostRepository postRepository) 
+        public ForumService(
+            IForumRepository forumRepository,
+            IPostRepository postRepository,
+            IUserRepository userRepository)
         {
             _ForumRepository = forumRepository;
             _PostRepository = postRepository;
+            _UserRepository = userRepository;
         }
 
-        public async Task<Forum?> CreateForumThreadAsync(CreateForumModel createForumModel)
+        public async Task<Forum> CreateForumThreadAsync(CreateForumModel createForumModel)
         {
+            if (!await _UserRepository.ExsistsAsync(x => x.Id == createForumModel.UserId))
+                throw new UserNotFoundException();
+
             Forum forum = new Forum()
             {
                 Title = createForumModel.Title
             };
 
             if (!await _ForumRepository.CreateAsync(forum))
-                return null;
+                throw new CantCreateModelException();
 
             Post masterPost = new Post()
             {
@@ -33,10 +40,14 @@ namespace TerranForum.Infrastructure.Services
                 CreatedAt = DateTime.Now
             };
 
-            return await _PostRepository.CreateAsync(masterPost) ? forum : null;
+            if (await _PostRepository.CreateAsync(masterPost))
+                return forum;
+
+            throw new CantCreateModelException();
         }
 
         private IForumRepository _ForumRepository;
         private IPostRepository _PostRepository;
+        private IUserRepository _UserRepository;
     }
 }

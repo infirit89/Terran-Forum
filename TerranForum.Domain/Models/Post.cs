@@ -11,7 +11,9 @@ namespace TerranForum.Domain.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required,
+        MinLength(Constants.MinPostContentSize),
+        MaxLength(Constants.MaxPostContentSize)]
         public string Content { get; set; } = null!;
 
         [Required]

@@ -11,7 +11,9 @@ namespace TerranForum.Domain.Models
     {
         public int Id { get; set; }
 
-        [Required, MinLength(5)]
+        [Required,
+        MinLength(Constants.MinForumThreadTitleSize),
+        MaxLength(Constants.MaxForumThreadTitleSize)]
         public string Title { get; set; } = null!;
         public virtual IEnumerable<Post> Posts { get; set; } = new List<Post>();
     }

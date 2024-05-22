@@ -11,7 +11,9 @@ namespace TerranForum.Domain.Models
     {
         public int Id { get; set; }
 
-        [Required, MinLength(5)]
+        [Required,
+        MinLength(Constants.MinPostReplyContentSize),
+        MaxLength(Constants.MaxPostReplyContentSize)]
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
 

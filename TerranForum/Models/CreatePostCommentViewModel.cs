@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TerranForum.Domain.Models;
 
 namespace TerranForum.Models
 {
@@ -6,8 +7,12 @@ namespace TerranForum.Models
     {
         [Required]
         [Display(Name = "comment")]
-        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
+        [StringLength(
+        Constants.MaxPostReplyContentSize,
+        ErrorMessage = ErrorMessages.CreatePostCommentErrorMessage,
+        MinimumLength = Constants.MinPostReplyContentSize)]
         public string Content { get; set; } = null!;
+
         [Required]
         public int PostId { get; set; }
         [Required]

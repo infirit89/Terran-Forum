@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System.Linq.Expressions;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Utils;

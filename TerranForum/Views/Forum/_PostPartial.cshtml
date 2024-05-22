@@ -2,11 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @model Post
-
 @inject SignInManager<ApplicationUser> SignInManager
-
-@{
-}
 
 @foreach (var paragraph in Model.Content.Split("\r\n\r\n"))
 {
@@ -27,7 +23,12 @@
     <div id="createReply">
         @if (SignInManager.IsSignedIn(User))
         {
-            <a href="#" class="replyAchor" postId="@Model.Id" forumId="@Model.ForumId" id="addReply">Add Comment</a>
+            <a class="replyAchor" 
+                asp-controller="Post" 
+                asp-action="GetCreatePostReplyView" 
+                postId="@Model.Id" 
+                forumId="@Model.ForumId" 
+                id="addReply">Add Comment</a>
         }
         else
         {

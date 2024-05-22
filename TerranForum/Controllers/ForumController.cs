@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Data.SqlTypes;
 using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
-using TerranForum.Application.Utils;
+using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
 using TerranForum.Models;
 
@@ -22,7 +20,6 @@ namespace TerranForum.Controllers
             _Logger = logger;
             _UserManager = userManager;
         }
-
 
         public async Task<IActionResult> All(int? page)
         {
@@ -64,17 +61,20 @@ namespace TerranForum.Controllers
                 _Logger.LogError("Invalid create model");
                 return ValidationProblem();
             }
-            Forum? forum = await _ForumService.CreateForumThreadAsync(createForumModel);
-            if(forum == null)
-            {
-                _Logger.LogError("Couldn't create forum");
-                return Problem("Couldn't create forum");
-            }
 
-            return RedirectToAction("ViewThread", "Forum", new
+            try
             {
-                forumId = forum.Id 
-            });
+                Forum forum = await _ForumService.CreateForumThreadAsync(createForumModel);
+                return RedirectToAction("ViewThread", "Forum", new
+                {
+                    forumId = forum.Id
+                });
+            }
+            catch (TerranForumException ex)
+            {
+                _Logger.LogError("Couldn't create thread");
+                return StatusCode(500);
+            }
         }
 
         private readonly UserManager<ApplicationUser> _UserManager;

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using TerranForum.Application.Dtos;
+﻿using TerranForum.Application.Dtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Models;
