@@ -64,7 +64,7 @@ namespace TerranForum.Infrastructure.Services
             return await _PostRatingRepository.UpdateAsync(postRating);
         }
 
-        public async Task<int> HasUserRated(string userId, int postId)
+        public async Task<int> GetUserRating(string userId, int postId)
         {
             Rating<Post>? postRating = await _PostRatingRepository.GetAsync(userId, postId);
             return postRating != null ? postRating.Value : 0;

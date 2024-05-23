@@ -4,15 +4,18 @@
 	for (const ratingContainer of ratingContainers) {
 		const likeButton = ratingContainer.querySelector('#like');
 		const dislikeButton = ratingContainer.querySelector('#dislike');
-		
-		const data = {
-			postId: ratingContainer.getAttribute('postId'),
-			rating: 0
-		};
+
+		const postId = ratingContainer.getAttribute('postId');
+		const rating = 0;
 		
 		likeButton.addEventListener('click', (e) => {
 			e.preventDefault();
 
+			fetch(`${likeButton.href}?postId=${postId}&rating=${rating}`, {
+				method: 'PUT'
+			})
+			.then(response => console.log(response))
+			.catch(error => console.error(error));
 		});
 
 		dislikeButton.addEventListener('click', (e) => {
