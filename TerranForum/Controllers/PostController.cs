@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TerranForum.Application.Dtos;
-using TerranForum.Application.Dtos.PostReplyDtos;
-using TerranForum.Application.Repositories;
+using TerranForum.Application.Dtos.PostDtos;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
@@ -17,12 +15,12 @@ namespace TerranForum.Controllers
             ILogger<PostController> logger,
             UserManager<ApplicationUser> userManager,
             IPostReplyService postReplyService,
-            IPostRepository postRepository)
+            IPostService postService)
         {
             _Logger = logger;
             _UserManager = userManager;
             _PostReplyService = postReplyService;
-            _PostRepository = postRepository;
+            _PostService = postService;
         }
 
         [HttpPost, Authorize]
@@ -96,10 +94,28 @@ namespace TerranForum.Controllers
             });
         }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateRating(int postId, sbyte rating)
+        {
+            try
+            {
+                return await _PostService.ChangeRating(new UpdatePostRatingModel()
+                {
+                    UserId = _UserManager.GetUserId(User),
+                    PostId = postId,
+                    Rating = rating
+                }) ? StatusCode(200) : StatusCode(500);
+            }
+            catch (TerranForumException ex) 
+            {
+                _Logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
+        }
+
         private readonly ILogger<PostController> _Logger;
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostReplyService _PostReplyService;
-        private readonly IPostRepository _PostRepository;
         private readonly IPostService _PostService;
     }
 }

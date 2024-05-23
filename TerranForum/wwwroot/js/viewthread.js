@@ -1,7 +1,29 @@
-﻿let previousCreateReplyContainer = null;
+﻿(function setupRatingButtons() {
+	const ratingContainers = document.querySelectorAll('#ratingContainer');
 
-(function setup() {
+	for (const ratingContainer of ratingContainers) {
+		const likeButton = ratingContainer.querySelector('#like');
+		const dislikeButton = ratingContainer.querySelector('#dislike');
+		
+		const data = {
+			postId: ratingContainer.getAttribute('postId'),
+			rating: 0
+		};
+		
+		likeButton.addEventListener('click', (e) => {
+			e.preventDefault();
+
+		});
+
+		dislikeButton.addEventListener('click', (e) => {
+			e.preventDefault();
+		});
+	}
+})();
+
+(function setupCommentForms() {
 	const parser = new DOMParser();
+	let previousCreateReplyContainer = null;
 
 	const addReplyButtons = document.querySelectorAll('#addReply');
 	for (const addReplyButton of addReplyButtons) {

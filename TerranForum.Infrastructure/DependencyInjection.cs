@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
+using TerranForum.Domain.Models;
 using TerranForum.Infrastructure.Repositories;
 using TerranForum.Infrastructure.Services;
 
@@ -24,6 +25,7 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostReplyRepository, PostReplyRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRatingRepository<Post>, PostRatingRepository>();
 
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IPostService, PostService>();

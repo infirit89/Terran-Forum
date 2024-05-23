@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TerranForum.Domain.Models;
 
-namespace TerranForum.Application.Dtos
+namespace TerranForum.Application.Dtos.PostDtos
 {
     public class CreatePostModel
     {

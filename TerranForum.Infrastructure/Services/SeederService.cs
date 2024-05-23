@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using TerranForum.Application.Dtos;
 using TerranForum.Application.Dtos.ForumDtos;
+using TerranForum.Application.Dtos.PostDtos;
 using TerranForum.Application.Dtos.PostReplyDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
