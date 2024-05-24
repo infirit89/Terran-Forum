@@ -21,7 +21,7 @@
 
 		likeButton.addEventListener('click', (e) => {
 			e.preventDefault();
-			const ratingModifier = likeButton.getAttribute('rating');
+			const ratingModifier = 1;
 			const ratingContainer = ratingModifyContainer.querySelector('div');
 			
 			updateRating(likeButton.href, ratingModifier, ratingContainer);
@@ -29,7 +29,7 @@
 
 		dislikeButton.addEventListener('click', (e) => {
 			e.preventDefault();
-			const ratingModifier = dislikeButton.getAttribute('rating');
+			const ratingModifier = -1;
 			const ratingContainer = ratingModifyContainer.querySelector('div');
 			
 			updateRating(dislikeButton.href, ratingModifier, ratingContainer);

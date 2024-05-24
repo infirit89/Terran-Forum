@@ -53,10 +53,9 @@ namespace TerranForum.Controllers
         }
 
         [Authorize, HttpPost]
-        public async Task<IActionResult> CreateThread(CreateForumModel createForumModel)
+        public async Task<IActionResult> CreateThread(CreateForumViewModel createForumViewModel)
         {
-            createForumModel.UserId = _UserManager.GetUserId(User);
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _Logger.LogError("Invalid create model");
                 return ValidationProblem();
@@ -64,7 +63,12 @@ namespace TerranForum.Controllers
 
             try
             {
-                Forum forum = await _ForumService.CreateForumThreadAsync(createForumModel);
+                Forum forum = await _ForumService.CreateForumThreadAsync(new CreateForumModel 
+                {
+                    Title = createForumViewModel.Title,
+                    Content = createForumViewModel.Content,
+                    UserId = _UserManager.GetUserId(User)
+                });
                 return RedirectToAction("ViewThread", "Forum", new
                 {
                     forumId = forum.Id

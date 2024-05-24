@@ -9,7 +9,7 @@ namespace TerranForum.Models
         [Display(Name = "comment")]
         [StringLength(
         Constants.MaxPostReplyContentSize,
-        ErrorMessage = ErrorMessages.CreatePostCommentErrorMessage,
+        ErrorMessage = ErrorMessages.CreateErrorMessage,
         MinimumLength = Constants.MinPostReplyContentSize)]
         public string Content { get; set; } = null!;
 

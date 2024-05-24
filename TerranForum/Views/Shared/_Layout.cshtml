@@ -15,18 +15,11 @@
 
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-0 navbar-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">Terran</a>
+                    <a class="navbar-brand" asp-controller="Forum" asp-action="All">Terran</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="navbar-collapse collapse">
-                        <ul class="navbar-nav ml-1">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Forum" asp-action="All">Forum</a>
-                            </li>
-                        </ul>
-                    </div>
                     <partial name="_LoginPartial" />
                 </div>
             </nav>

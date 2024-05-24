@@ -48,7 +48,7 @@ namespace TerranForum
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=home}/{action=index}/{id?}");
+                pattern: "{controller=forum}/{action=all}/{id?}");
 
             app.MapRazorPages();
 

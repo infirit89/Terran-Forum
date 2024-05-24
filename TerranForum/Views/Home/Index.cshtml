@@ -1,11 +1,24 @@
-﻿@{
+﻿@using TerranForum.Domain.Models;
+@model IEnumerable<Forum>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 text-start">
-            <h1>Some text</h1>
-        </div>
-    </div>
-</section>
+<div>
+    <table class="table table-hover">
+        <tbody>
+            @foreach (var forum in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            await Html.RenderPartialAsync(
+                                "~/Views/Forum/_ForumPartial.cshtml",
+                                forum);
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

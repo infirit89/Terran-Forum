@@ -19,7 +19,9 @@
     <div class="container pb-4">
         <div class="container">
             @{
-                await Html.RenderPartialAsync("_PostPartial", masterPost);
+                await Html.RenderPartialAsync(
+                    "~/Views/Post/_PostPartial.cshtml",
+                    masterPost);
             }
         </div>
 
@@ -29,7 +31,9 @@
             {
                 <div class="container pt-4">
                     @{
-                        await Html.RenderPartialAsync("_PostPartial", post);
+                        await Html.RenderPartialAsync(
+                            "~/Views/Post/_PostPartial.cshtml",
+                            post);
                     }
                 </div>
                 <hr class="mt-1"/>

@@ -1,20 +1,27 @@
-﻿@{
-}
+﻿@model CreateForumViewModel
 
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-controller="Forum" asp-action="CreateThread">
             <h2>Create a new thread.</h2>
             <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
-                <input name="title" class="form-control" autocomplete="username" aria-required="true" />
-                <label for="title"></label>
+                <input asp-for="Title" name="title" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Title"></label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+
             </div>
             <div class="form-floating">
-                <input name="content" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label for="content"></label>
+                <input asp-for="Content" name="content" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Content"></label>
+                <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
