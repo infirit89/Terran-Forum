@@ -43,7 +43,7 @@ namespace TerranForum.Infrastructure.Services
             throw new CantCreateModelException();
         }
 
-        public async Task<bool> ChangeRating(UpdatePostRatingModel updatePostRatingModel)
+        public async Task<sbyte> TryChangeRating(UpdatePostRatingModel updatePostRatingModel)
         {
             if (!await _PostRepository.ExsistsAsync(x => x.Id == updatePostRatingModel.PostId))
                 throw new PostNotFoundException();
@@ -51,17 +51,46 @@ namespace TerranForum.Infrastructure.Services
             if (!await _UserRepository.ExsistsAsync(x => x.Id == updatePostRatingModel.UserId))
                 throw new UserNotFoundException();
 
-            Rating<Post> postRating = new()
+            Rating<Post>? postRating = await _PostRatingRepository.GetAsync(updatePostRatingModel.UserId, updatePostRatingModel.PostId);
+            if (postRating != null) 
+            {
+                sbyte ratingModifier = postRating.Value;
+                if (postRating.Value == updatePostRatingModel.Rating)
+                {
+                    if (postRating.Value == 1)
+                    {
+                        ratingModifier = -1;
+                        postRating.Value += ratingModifier;
+                    }
+                    else if (postRating.Value == -1)
+                    {
+                        ratingModifier = 1;
+                        postRating.Value += ratingModifier;
+                    }
+                }
+                else 
+                {
+                    postRating.Value = updatePostRatingModel.Rating;
+                    ratingModifier = updatePostRatingModel.Rating;
+                }
+
+                if (!await _PostRatingRepository.UpdateAsync(postRating))
+                    throw new CantUpdateModelException();
+
+                return ratingModifier;
+            }
+
+            postRating = new()
             {
                 UserId = updatePostRatingModel.UserId,
                 ServiceId = updatePostRatingModel.PostId,
                 Value = updatePostRatingModel.Rating
             };
 
-            if (!await _PostRatingRepository.ExistsAsync(x => x.UserId == postRating.UserId && x.ServiceId == postRating.ServiceId))
-                return await _PostRatingRepository.CreateAsync(postRating);
+            if (!await _PostRatingRepository.CreateAsync(postRating))
+                throw new CantCreateModelException();
 
-            return await _PostRatingRepository.UpdateAsync(postRating);
+            return postRating.Value;
         }
 
         public async Task<int> GetUserRating(string userId, int postId)

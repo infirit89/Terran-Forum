@@ -1,25 +1,38 @@
 ﻿(function setupRatingButtons() {
-	const ratingContainers = document.querySelectorAll('#ratingContainer');
+	const ratingModifyContainers = document.querySelectorAll('#ratingModifyContainer');
 
-	for (const ratingContainer of ratingContainers) {
-		const likeButton = ratingContainer.querySelector('#like');
-		const dislikeButton = ratingContainer.querySelector('#dislike');
+	for (const ratingModifyContainer of ratingModifyContainers) {
+		const likeButton = ratingModifyContainer.querySelector('#like');
+		const dislikeButton = ratingModifyContainer.querySelector('#dislike');
 
-		const postId = ratingContainer.getAttribute('postId');
-		const rating = 0;
-		
-		likeButton.addEventListener('click', (e) => {
-			e.preventDefault();
+		const postId = ratingModifyContainer.getAttribute('postId');
 
-			fetch(`${likeButton.href}?postId=${postId}&rating=${rating}`, {
+		function updateRating(uri, ratingModifier, ratingContainer) {
+			fetch(`${uri}?postId=${postId}&rating=${ratingModifier}`, {
 				method: 'PUT'
 			})
-			.then(response => console.log(response))
+			.then(response => response.json())
+			.then(data =>
+				ratingContainer.textContent =
+				Number(ratingContainer.textContent) +
+				Number(data.rating))
 			.catch(error => console.error(error));
+		}
+
+		likeButton.addEventListener('click', (e) => {
+			e.preventDefault();
+			const ratingModifier = likeButton.getAttribute('rating');
+			const ratingContainer = ratingModifyContainer.querySelector('div');
+			
+			updateRating(likeButton.href, ratingModifier, ratingContainer);
 		});
 
 		dislikeButton.addEventListener('click', (e) => {
 			e.preventDefault();
+			const ratingModifier = dislikeButton.getAttribute('rating');
+			const ratingContainer = ratingModifyContainer.querySelector('div');
+			
+			updateRating(dislikeButton.href, ratingModifier, ratingContainer);
 		});
 	}
 })();

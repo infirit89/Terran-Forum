@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TerranForum.Application.Dtos.PostDtos;
+using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
@@ -15,7 +16,8 @@ namespace TerranForum.Controllers
             ILogger<PostController> logger,
             UserManager<ApplicationUser> userManager,
             IPostReplyService postReplyService,
-            IPostService postService)
+            IPostService postService,
+            IRatingRepository<Post> postRatingRepository)
         {
             _Logger = logger;
             _UserManager = userManager;
@@ -99,12 +101,16 @@ namespace TerranForum.Controllers
         {
             try
             {
-                return await _PostService.ChangeRating(new UpdatePostRatingModel()
+                if (!(rating >= -1 && rating <= 1))
+                    return StatusCode(500);
+
+                sbyte ratingModifier = await _PostService.TryChangeRating(new UpdatePostRatingModel()
                 {
                     UserId = _UserManager.GetUserId(User),
                     PostId = postId,
                     Rating = rating
-                }) ? StatusCode(200) : StatusCode(500);
+                });
+                return Json(new { Rating = ratingModifier });
             }
             catch (TerranForumException ex) 
             {

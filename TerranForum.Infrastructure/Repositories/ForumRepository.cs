@@ -47,6 +47,7 @@ namespace TerranForum.Infrastructure.Repositories
                     .ThenInclude(p => p.Replies)
                 .Include(f => f.Posts)
                     .ThenInclude(p => p.Ratings)
+                        .ThenInclude(r => r.User)
                 .Select(f => new Forum 
                 {
                     Id = f.Id,
@@ -64,7 +65,8 @@ namespace TerranForum.Infrastructure.Repositories
                         Replies = p.Replies.OrderByDescending(pr => pr.CreatedAt),
                         ForumId = p.ForumId,
                         Forum = p.Forum,
-                        IsMaster = p.IsMaster
+                        IsMaster = p.IsMaster,
+                        Ratings = p.Ratings.ToArray()
                     })
                 })
                 .FirstOrDefaultAsync(f => f.Id == id);

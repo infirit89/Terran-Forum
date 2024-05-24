@@ -32,8 +32,9 @@ namespace TerranForum.Infrastructure
             {
                 return await SaveChangesAsync() > 0;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return false;
             }
         }
