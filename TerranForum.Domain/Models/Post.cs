@@ -18,12 +18,12 @@ namespace TerranForum.Domain.Models
 
         [Required]
         public string UserId { get; set; } = null!;
-        public virtual ApplicationUser User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public virtual IEnumerable<PostReply> Replies { get; set; } = new List<PostReply>();
         [Required]
         public int ForumId { get; set; }
-        public virtual Forum Forum { get; set; } = null!;
+        public Forum Forum { get; set; } = null!;
 
         public bool IsMaster { get; init; }
         public virtual IEnumerable<Rating<Post>> Ratings { get; set; } = new List<Rating<Post>>();

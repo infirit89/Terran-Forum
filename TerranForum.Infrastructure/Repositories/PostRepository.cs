@@ -51,6 +51,16 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
+        public Task<Post?> GetFirstWithRatingAsync(Expression<Func<Post, bool>> predicate)
+        {
+            return _DbContext.Posts.Include(p => p.Ratings).FirstOrDefaultAsync(predicate);
+        }
+
+        public Task<Post?> GetFirstWithUserAsync(Expression<Func<Post, bool>> predicate)
+        {
+            return _DbContext.Posts.Include(p => p.User).FirstOrDefaultAsync(predicate);
+        }
+
         private readonly TerranForumDbContext _DbContext;
     }
 }

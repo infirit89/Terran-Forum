@@ -1,10 +1,19 @@
-﻿@using TerranForum.Domain.Models
-@model Forum
+﻿@model ForumViewModel
 
-<div class="container">
-    <a class="forum-title mb-0 pl-0" asp-controller="Forum"
-       asp-action="ViewThread" asp-route-forumId="@Model.Id">
-        @Model.Title
+<div class="container row mb-3">
+    <div class="col-md-1">
+        <div class="row">
+            <div class="col-md-2">@Model.Rating Rating</div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3>
+            <a class="forum-title mb-0 pl-0" asp-controller="Forum"
+               asp-action="ViewThread" asp-route-forumId="@Model.Id">
+                @Model.Title
+            </a>
+        </h3>
         <p>some category</p>
-    </a>
+    </div>
 </div>
+<hr />

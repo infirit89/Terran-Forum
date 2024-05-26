@@ -7,9 +7,9 @@ using TerranForum.Domain.Models;
 
 namespace TerranForum.Application.Dtos.ForumDtos
 {
-    public class GetForumPagedModel
+    public class ForumsPagedModel
     {
-        public IEnumerable<Forum> Forums { get; set; }
+        public IEnumerable<Forum> Data { get; set; } = null!;
         public int PageCount { get; set; }
     }
 }

@@ -24,10 +24,18 @@ namespace TerranForum.Controllers
         public async Task<IActionResult> All(int? page)
         {
             int currentPage = page ?? 0;
-            GetForumPagedModel forums =  await _ForumRepository.GetForumsPagedAsync(currentPage, _PageSize);
+            ForumsPagedModel pagedForums =  await _ForumRepository.GetForumsPagedAsync(currentPage, _PageSize);
             ViewData["CurrentPage"] = currentPage;
-            ViewData["PageCount"] = forums.PageCount;
-            return View(forums.Forums);
+            ViewData["PageCount"] = pagedForums.PageCount;
+            IEnumerable<Task<ForumViewModel>> forumData =
+                pagedForums.Data.Select(async f => new ForumViewModel
+                {
+                    Id = f.Id,
+                    Title = f.Title,
+                    Rating = await _ForumService.GetForumRatingAsync(f.Id),
+                    User = await _ForumService.GetForumCreatorAsync(f.Id)
+                });
+            return View(forumData);
         }
 
         public async Task<IActionResult> ViewThread(int forumId)

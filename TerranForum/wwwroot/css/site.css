@@ -94,3 +94,23 @@ textarea {
     width: 100%;
     resize: vertical;
 }
+
+.primary-button {
+    color: rgb(11, 16, 19);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.light-button-outline {
+    color: var(--text-color);
+    background-color: var(--secondary-700);
+/*    border-color: var(--secondary-700);*/
+    padding: .2rem .4rem;
+}
+
+.light-button-outline:hover {
+    color: var(--text-color);
+    border-color: var(--secondary-700);
+    background-color: var(--secondary-700);
+    padding: .2rem .4rem;
+}

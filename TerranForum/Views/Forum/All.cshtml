@@ -1,45 +1,40 @@
 ﻿@using TerranForum.Domain.Models;
-@model IEnumerable<Forum>
+@model IEnumerable<Task<ForumViewModel>>
 @{
     int currentPage = (int)ViewData["CurrentPage"]!;
     int pageCount = (int)ViewData["PageCount"]!;
-    int previousPage = Math.Max(currentPage - 1, 0);
+    int previousPage = Math.Max(currentPage - 1, -1);
     int nextPage = Math.Min(currentPage + 1, pageCount - 1);
 }
 
 <div>
+    <div class="d-flex justify-content-end">
+        <form method="get" asp-controller="Forum" asp-action="Create">
+            <button type="submit" class="btn primary-button">Ask Question</button>
+        </form>
+    </div>
 
-    <form method="get" asp-controller="Forum" asp-action="Create">
-        <input type="submit" value="Ask Question" />
-    </form>
-
-    <table class="table table-hover">
-        <tbody>
-            @foreach (var forum in Model)
-            {
-                <tr>
-                    <td>
-                        @{
-                            await Html.RenderPartialAsync("_ForumPartial", forum);
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var forum in Model)
+    {
+        await Html.RenderPartialAsync(
+            "_ForumPartial",
+            await forum);
+    }
 
     <div class="container">
         <div class="row">
             <div class="col-sm-1">
                 <form class="page-form form-inline" method="get" asp-controller="Forum" asp-action="All">
                     <input name="page" value="@(previousPage)" hidden />
-                    @if (previousPage > 0)
+                    @if (previousPage > -1)
                     {
-                        <input type="submit" value="Previous"/>
+                        <button class="btn light-button-outline"
+                                type="submit">Previous</button>
                     }
                     else
                     {
-                        <input type="submit" value="Previous" disabled/>
+                        <button class="btn light-button-outline"
+                            type="button" disabled>Previous</button>
                     }
                 </form>
             </div>
@@ -47,13 +42,15 @@
                 <form class="form-inline" method="get" asp-controller="Forum" asp-action="All">
                     <input name="page" value="@(nextPage)" hidden />
 
-                    @if (nextPage < pageCount - 1)
+                    @if (currentPage != nextPage)
                     {
-                        <input type="submit" value="Next"/>
+                        <button class="btn light-button-outline"
+                                type="submit">Next</button>
                     }
                     else
                     {
-                        <input type="submit" value="Next" disabled/>
+                        <button class="btn light-button-outline"
+                            type="button" disabled>Next</button>
                     }
                 </form>
             </div>

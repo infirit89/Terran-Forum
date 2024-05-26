@@ -13,6 +13,12 @@ namespace TerranForum.Infrastructure.Configurations
                 .WithOne(x => x.Post)
                 .HasForeignKey(x => x.PostId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(x => x.User)
+                .WithMany(x => x.Posts)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

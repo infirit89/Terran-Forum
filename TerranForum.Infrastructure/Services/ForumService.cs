@@ -46,6 +46,24 @@ namespace TerranForum.Infrastructure.Services
             throw new CantCreateModelException();
         }
 
+        public async Task<int> GetForumRatingAsync(int forumId) 
+        {
+            Post post = await _PostRepository
+                .GetFirstWithRatingAsync(p =>
+                    p.ForumId == forumId && p.IsMaster) 
+                        ?? throw new PostNotFoundException();
+            return post.Ratings.Sum(r => r.Value);
+        }
+
+        public async Task<ApplicationUser> GetForumCreatorAsync(int forumId)
+        {
+            Post post = await _PostRepository
+                .GetFirstWithUserAsync(p =>
+                    p.ForumId == forumId && p.IsMaster) 
+                        ?? throw new PostNotFoundException();
+            return post.User;
+        }
+
         private IForumRepository _ForumRepository;
         private IPostRepository _PostRepository;
         private IUserRepository _UserRepository;

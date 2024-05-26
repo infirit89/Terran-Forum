@@ -5,6 +5,6 @@ namespace TerranForum.Application.Repositories
 {
     public interface IForumRepository : IRepository<Forum>
     {
-        Task<GetForumPagedModel> GetForumsPagedAsync(int page, int size);
+        Task<ForumsPagedModel> GetForumsPagedAsync(int page, int size);
     }
 }

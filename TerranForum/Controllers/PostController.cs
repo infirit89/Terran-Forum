@@ -16,8 +16,7 @@ namespace TerranForum.Controllers
             ILogger<PostController> logger,
             UserManager<ApplicationUser> userManager,
             IPostReplyService postReplyService,
-            IPostService postService,
-            IRatingRepository<Post> postRatingRepository)
+            IPostService postService)
         {
             _Logger = logger;
             _UserManager = userManager;
@@ -67,7 +66,7 @@ namespace TerranForum.Controllers
                 });
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> CreatePost(CreatePostViewModel createPostViewModel)
         {
             if (!ModelState.IsValid)
@@ -96,7 +95,7 @@ namespace TerranForum.Controllers
             });
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         public async Task<IActionResult> UpdateRating(int postId, sbyte rating)
         {
             try
