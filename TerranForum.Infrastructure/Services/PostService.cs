@@ -43,7 +43,7 @@ namespace TerranForum.Infrastructure.Services
             throw new CantCreateModelException();
         }
 
-        public async Task<sbyte> TryChangeRating(UpdatePostRatingModel updatePostRatingModel)
+        public async Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel)
         {
             if (!await _PostRepository.ExsistsAsync(x => x.Id == updatePostRatingModel.PostId))
                 throw new PostNotFoundException();
@@ -52,32 +52,27 @@ namespace TerranForum.Infrastructure.Services
                 throw new UserNotFoundException();
 
             Rating<Post>? postRating = await _PostRatingRepository.GetAsync(updatePostRatingModel.UserId, updatePostRatingModel.PostId);
-            if (postRating != null) 
+            Post post = 
+                await _PostRepository
+                .GetFirstWithAsync(
+                    x => x.Id == updatePostRatingModel.PostId) 
+                ?? throw new PostNotFoundException();
+
+            if (postRating != null)
             {
-                sbyte ratingModifier = postRating.Value;
                 if (postRating.Value == updatePostRatingModel.Rating)
                 {
-                    if (postRating.Value == 1)
-                    {
-                        ratingModifier = -1;
-                        postRating.Value += ratingModifier;
-                    }
-                    else if (postRating.Value == -1)
-                    {
-                        ratingModifier = 1;
-                        postRating.Value += ratingModifier;
-                    }
+                    postRating.Value = (sbyte)(postRating.Value + -postRating.Value);
                 }
                 else 
                 {
                     postRating.Value = updatePostRatingModel.Rating;
-                    ratingModifier = updatePostRatingModel.Rating;
                 }
 
                 if (!await _PostRatingRepository.UpdateAsync(postRating))
                     throw new CantUpdateModelException();
 
-                return ratingModifier;
+                return post.Ratings.Sum(r => r.Value);
             }
 
             postRating = new()
@@ -90,7 +85,7 @@ namespace TerranForum.Infrastructure.Services
             if (!await _PostRatingRepository.CreateAsync(postRating))
                 throw new CantCreateModelException();
 
-            return postRating.Value;
+            return post.Ratings.Sum(r => r.Value);
         }
 
         public async Task<int> GetUserRating(string userId, int postId)

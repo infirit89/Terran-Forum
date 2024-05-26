@@ -114,3 +114,7 @@ textarea {
     background-color: var(--secondary-700);
     padding: .2rem .4rem;
 }
+
+.thread-title {
+    font-size: 1.3rem;
+}

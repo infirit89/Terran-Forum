@@ -6,7 +6,7 @@ namespace TerranForum.Application.Services
     public interface IPostService
     {
         Task<Post> AddPostToThread(CreatePostModel createPostModel);
-        Task<sbyte> TryChangeRating(UpdatePostRatingModel updatePostRatingModel);
+        Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel);
         Task<int> GetUserRating(string userId, int postId);
     }
 }

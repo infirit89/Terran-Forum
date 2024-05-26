@@ -12,7 +12,7 @@ namespace TerranForum.Controllers
 {
     public class ForumController : Controller
     {
-        public ForumController(IForumService forumService, IForumRepository forumRepository, 
+        public ForumController(IForumService forumService, IForumRepository forumRepository,
             ILogger<ForumController> logger, UserManager<ApplicationUser> userManager)
         {
             _ForumService = forumService;
@@ -28,14 +28,31 @@ namespace TerranForum.Controllers
             ViewData["CurrentPage"] = currentPage;
             ViewData["PageCount"] = pagedForums.PageCount;
             IEnumerable<Task<ForumViewModel>> forumData =
-                pagedForums.Data.Select(async f => new ForumViewModel
-                {
-                    Id = f.Id,
-                    Title = f.Title,
-                    Rating = await _ForumService.GetForumRatingAsync(f.Id),
-                    User = await _ForumService.GetForumCreatorAsync(f.Id)
-                });
+                pagedForums.Data
+                .Select(
+                    async f => await ConvertToForumViewModel(f));
             return View(forumData);
+        }
+
+        private async Task<ForumViewModel> ConvertToForumViewModel(Forum forum) 
+        {
+            Post masterPost = await _ForumService.GetForumMasterPost(forum.Id);
+            string masterPostContent = new string(masterPost.Content
+                            .Take(_MasterPostContentThumbnailSize)
+                            .ToArray());
+
+            if (masterPost.Content.Length >= _MasterPostContentThumbnailSize + 3)
+                masterPostContent += new string('.', 3);
+
+            return new ForumViewModel
+            {
+                Id = forum.Id,
+                Title = forum.Title,
+                Rating = masterPost.Ratings.Sum(r => r.Value),
+                User = masterPost.User,
+                Content = masterPostContent,
+                CreatorUserName = masterPost.User.UserName
+            };
         }
 
         public async Task<IActionResult> ViewThread(int forumId)
@@ -94,5 +111,6 @@ namespace TerranForum.Controllers
         private readonly IForumRepository _ForumRepository;
         private readonly ILogger<ForumController> _Logger;
         private const int _PageSize = 10;
+        private const int _MasterPostContentThumbnailSize = 250;
     }
 }

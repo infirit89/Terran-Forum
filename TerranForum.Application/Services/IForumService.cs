@@ -6,7 +6,6 @@ namespace TerranForum.Application.Services
     public interface IForumService
     {
         Task<Forum> CreateForumThreadAsync(CreateForumModel createForumModel);
-        Task<int> GetForumRatingAsync(int forumId);
-        Task<ApplicationUser> GetForumCreatorAsync(int forumId);
+        Task<Post> GetForumMasterPost(int forumId);
     }
 }

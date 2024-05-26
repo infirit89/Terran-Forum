@@ -14,15 +14,28 @@
         @Model.User.UserName
     </div>
     <div class="d-flex justify-content-start" postId="@Model.Id" id="ratingModifyContainer">
-        <a class="px-2"  
-            id="like"
-            asp-controller="Post"
-            asp-action="UpdateRating">Like</a>
-        <div class="px-1">@Model.Ratings.Sum(x => x.Value)</div>
-        <a class="px-2"
-            id="dislike"
-            asp-controller="Post"
-            asp-action="UpdateRating">Dislike</a>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="px-2"  
+                id="like"
+                asp-controller="Post"
+                asp-action="UpdateRating">Like</a>    
+            <div class="px-1">@Model.Ratings.Sum(x => x.Value)</div>
+            <a class="px-2"
+                id="dislike"
+                asp-controller="Post"
+                asp-action="UpdateRating">Dislike</a>
+        }
+        else
+        {
+            <a class="px-2"
+               asp-area="Identity"
+               asp-page="/Account/Login">Like</a>
+            <div class="px-1">@Model.Ratings.Sum(x => x.Value)</div>
+            <a class="px-2"
+               asp-area="Identity" 
+               asp-page="/Account/Login">Dislike</a>
+        }
     </div>
 </div>
 <div class="container">

@@ -103,13 +103,13 @@ namespace TerranForum.Controllers
                 if (!(rating >= -1 && rating <= 1))
                     return StatusCode(500);
 
-                sbyte ratingModifier = await _PostService.TryChangeRating(new UpdatePostRatingModel()
+                int newRating = await _PostService.ChangeRating(new UpdatePostRatingModel()
                 {
                     UserId = _UserManager.GetUserId(User),
                     PostId = postId,
                     Rating = rating
                 });
-                return Json(new { Rating = ratingModifier });
+                return Json(new { Rating = newRating });
             }
             catch (TerranForumException ex) 
             {

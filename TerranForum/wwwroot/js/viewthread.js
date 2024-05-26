@@ -13,9 +13,7 @@
 			})
 			.then(response => response.json())
 			.then(data =>
-				ratingContainer.textContent =
-				Number(ratingContainer.textContent) +
-				Number(data.rating))
+				ratingContainer.textContent = Number(data.rating))
 			.catch(error => console.error(error));
 		}
 
