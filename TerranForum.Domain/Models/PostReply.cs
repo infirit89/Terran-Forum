@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TerranForum.Domain.Interfaces;
 
 namespace TerranForum.Domain.Models
 {
-    public class PostReply : ILikeble
+    public class PostReply : ILikeble, ISoftDeletableEntity
     {
         public int Id { get; set; }
 
@@ -26,5 +27,7 @@ namespace TerranForum.Domain.Models
         public virtual Post Post { get; set; } = null!;
 
         public virtual IEnumerable<Rating<PostReply>> Ratings { get; set; } = new List<Rating<PostReply>>();
+        public bool IsDeleted { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
     }
 }

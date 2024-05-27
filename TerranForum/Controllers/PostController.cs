@@ -127,11 +127,17 @@ namespace TerranForum.Controllers
         }
 
         [HttpPost, Authorize]
-        public IActionResult Delete(DeletePostViewModel model) 
+        public async Task<IActionResult> Delete(DeletePostViewModel model) 
         {
             try
             {
-                _PostService.DeletePost(_UserManager.GetUserId(User), model.PostId);
+                await _PostService.DeletePost(new DeletePostModel
+                {
+                    UserId = _UserManager.GetUserId(User),
+                    PostId = model.PostId,
+                    ForumId = model.ForumId
+                });
+
                 return RedirectToAction("ViewThread", "Forum", new { ForumId = model.ForumId });
             }
             catch (TerranForumException ex)

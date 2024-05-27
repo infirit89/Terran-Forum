@@ -8,6 +8,6 @@ namespace TerranForum.Application.Services
         Task<Post> AddPostToThread(CreatePostModel createPostModel);
         Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel);
         Task<int> GetUserRating(string userId, int postId);
-        Task DeletePost(string userId, int postId);
+        Task DeletePost(DeletePostModel deletePostModel);
     }
 }

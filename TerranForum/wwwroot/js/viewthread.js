@@ -1,12 +1,26 @@
 ﻿(function setupManageButtons()
 {
+	const parser = new DOMParser();
 	const manageContainers = document.querySelectorAll('#managePost');
 	for (const manageContainer of manageContainers)
 	{
 		const deleteButton = manageContainer.querySelector('a');
+		const forumId = manageContainer.getAttribute('forumId');
 		const postId = manageContainer.getAttribute('postId');
 		deleteButton.addEventListener('click', (e) => {
 			e.preventDefault();
+
+			fetch(`${deleteButton.href}?forumId=${forumId}&postId=${postId}`)
+				.then(response => response.status == 200 ? response.text() : '')
+				.then((responseText) =>
+				{
+					const mainContainer = document.querySelector('main');
+					const parsedDom = parser.parseFromString(responseText, "text/html");
+					mainContainer.appendChild(parsedDom.querySelector('div'));
+					const deleteModal = new bootstrap.Modal('#deleteModal');
+					deleteModal.toggle();
+				})
+				.catch(error => console.error(error));
 		});
 	}
 })();

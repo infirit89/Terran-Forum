@@ -29,7 +29,7 @@ namespace TerranForum.Infrastructure.Services
             };
 
             if (!await _ForumRepository.CreateAsync(forum))
-                throw new CantCreateModelException();
+                throw new CreateModelException();
 
             Post masterPost = new Post()
             {
@@ -43,7 +43,7 @@ namespace TerranForum.Infrastructure.Services
             if (await _PostRepository.CreateAsync(masterPost))
                 return forum;
 
-            throw new CantCreateModelException();
+            throw new CreateModelException();
         }
 
         public async Task<Post> GetForumMasterPost(int forumId) 

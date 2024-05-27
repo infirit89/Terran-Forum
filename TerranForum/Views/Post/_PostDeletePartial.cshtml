@@ -1,16 +1,16 @@
 ﻿@model DeletePostViewModel
 
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content delete-modal">
+            <div class="modal-header border-0">
                 <h1 class="modal-title fs-5">Delete?</h1>
             </div>
-            <div class="modal-body">
+            <div class="modal-body border-0">
                 <p>Are you sure you want to delete your message?</p>
             </div>
-            <div class="modal-footer">
-                <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model">
+            <div class="modal-footer border-0">
+                <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model.PostId" asp-route-forumId="@Model.ForumId">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

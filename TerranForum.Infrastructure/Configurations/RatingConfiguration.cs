@@ -20,6 +20,9 @@ namespace TerranForum.Infrastructure.Configurations
                 .WithMany(e => e.Ratings)
                 .HasForeignKey(e => e.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
         }
     }
 
@@ -39,6 +42,9 @@ namespace TerranForum.Infrastructure.Configurations
                 .WithMany(e => e.Ratings)
                 .HasForeignKey(e => e.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
         }
     }
 }

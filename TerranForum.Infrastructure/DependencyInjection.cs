@@ -16,9 +16,13 @@ namespace TerranForum.Infrastructure
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             string assemblyName = currentAssembly.GetName().Name ?? throw new NullReferenceException("Infrastructure Assembly name was null");
 
-            services.AddDbContext<TerranForumDbContext>(options =>
+            services.AddSingleton<SoftDeleteInterceptor>();
+
+            services.AddDbContext<TerranForumDbContext>((serviceProvider, options) =>
             {
-                options.UseSqlServer(connectionString, x => x.MigrationsAssembly(assemblyName));
+                options
+                .UseSqlServer(
+                    connectionString, x => x.MigrationsAssembly(assemblyName));
             });
 
             services.AddScoped<IForumRepository, ForumRepository>();

@@ -2,14 +2,23 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TerranForum.Domain.Models;
 using System.Reflection;
+using TerranForum.Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TerranForum.Infrastructure
 {
     public class TerranForumDbContext : IdentityDbContext<ApplicationUser>
     {
-        public TerranForumDbContext() { }
-        public TerranForumDbContext(DbContextOptions<TerranForumDbContext> options)
-            : base(options) { }
+        public TerranForumDbContext(IServiceProvider serviceProvider)
+        {
+            _Services = serviceProvider;
+        }
+
+        public TerranForumDbContext(DbContextOptions<TerranForumDbContext> options, IServiceProvider serviceProvider)
+            : base(options)
+        {
+            _Services = serviceProvider;
+        }
 
         public override DbSet<ApplicationUser> Users { get; set; } = null!;
         public virtual DbSet<Forum> Forums { get; set; } = null!;
@@ -17,6 +26,11 @@ namespace TerranForum.Infrastructure
         public virtual DbSet<Rating<Post>> PostRatings { get; set; } = null!;
         public virtual DbSet<PostReply> PostReplies { get; set; } = null!;
         public virtual DbSet<Rating<PostReply>> PostReplyRatings { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_Services.GetRequiredService<SoftDeleteInterceptor>());
+        }
 
         protected override void OnModelCreating(ModelBuilder builder) 
         {
@@ -38,5 +52,7 @@ namespace TerranForum.Infrastructure
                 return false;
             }
         }
+
+        private readonly IServiceProvider _Services;
     }
 }

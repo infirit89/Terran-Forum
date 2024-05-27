@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerranForum.Domain.Models
+namespace TerranForum.Domain.Interfaces
 {
     public interface ILikeble { }
 }

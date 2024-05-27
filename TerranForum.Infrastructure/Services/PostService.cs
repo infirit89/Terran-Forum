@@ -40,7 +40,7 @@ namespace TerranForum.Infrastructure.Services
             if (await _PostRepository.CreateAsync(post))
                 return post;
 
-            throw new CantCreateModelException();
+            throw new CreateModelException();
         }
 
         public async Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel)
@@ -70,7 +70,7 @@ namespace TerranForum.Infrastructure.Services
                 }
 
                 if (!await _PostRatingRepository.UpdateAsync(postRating))
-                    throw new CantUpdateModelException();
+                    throw new UpdateModelException();
 
                 return post.Ratings.Sum(r => r.Value);
             }
@@ -83,7 +83,7 @@ namespace TerranForum.Infrastructure.Services
             };
 
             if (!await _PostRatingRepository.CreateAsync(postRating))
-                throw new CantCreateModelException();
+                throw new CreateModelException();
 
             return post.Ratings.Sum(r => r.Value);
         }
@@ -94,9 +94,22 @@ namespace TerranForum.Infrastructure.Services
             return postRating != null ? postRating.Value : 0;
         }
 
-        public Task DeletePost(string userId, int postId)
+        public async Task DeletePost(DeletePostModel deletePostModel)
         {
-            throw new NotImplementedException();
+            if (!await _ForumRepository.ExsistsAsync(x => x.Id == deletePostModel.ForumId))
+                throw new ForumNotFoundException();
+
+            if (!await _UserRepository.ExsistsAsync(x => x.Id == deletePostModel.UserId))
+                throw new UserNotFoundException();
+
+            Post post = await _PostRepository.GetByIdAsync(deletePostModel.PostId) 
+                ?? throw new PostNotFoundException();
+
+            if (post.UserId != deletePostModel.UserId)
+                throw new NotCorrectUserException();
+
+            if (!await _PostRepository.DeleteAsync(post))
+                throw new DeleteModelException();
         }
 
         private readonly IPostRepository _PostRepository;

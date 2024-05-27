@@ -4,16 +4,10 @@ using TerranForum.Domain.Models;
 
 namespace TerranForum.Infrastructure.Configurations
 {
-    internal class ForumConfiguration : IEntityTypeConfiguration<Forum>
+    internal class PostReplyConfiguration : IEntityTypeConfiguration<PostReply>
     {
-        public void Configure(EntityTypeBuilder<Forum> builder)
+        public void Configure(EntityTypeBuilder<PostReply> builder)
         {
-            builder
-                .HasMany(x => x.Posts)
-                .WithOne(x => x.Forum)
-                .HasForeignKey(x => x.ForumId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasQueryFilter(x => !x.IsDeleted);
             builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
         }

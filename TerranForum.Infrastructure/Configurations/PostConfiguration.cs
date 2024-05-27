@@ -19,6 +19,9 @@ namespace TerranForum.Infrastructure.Configurations
                 .WithMany(x => x.Posts)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
         }
     }
 }

@@ -118,3 +118,8 @@ textarea {
 .thread-title {
     font-size: 1.3rem;
 }
+
+.delete-modal {
+    background-color: var(--background-800);
+    color: var(--text-color);
+}

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using TerranForum.Domain.Interfaces;
 using TerranForum.Domain.Models;
 
 namespace TerranForum.Application.Repositories

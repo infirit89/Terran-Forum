@@ -37,7 +37,7 @@ namespace TerranForum.Infrastructure.Services
             if (await _PostReplyRepository.CreateAsync(postReply))
                 return postReply;
 
-            throw new CantCreateModelException();
+            throw new CreateModelException();
         }
 
         private readonly IPostReplyRepository _PostReplyRepository;

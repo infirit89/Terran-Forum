@@ -17,17 +17,17 @@
 	--text-900: hsl(220, 10%, 94%, 10%);
 	--text-950: hsl(220, 10%, 94%, 5%);
 
-	--background-50: hsl(206, 28%, 95%);
-	--background-100: hsl(203, 25%, 90%);
-	--background-200: hsl(204, 27%, 80%);
+	--background-50: hsl(203, 27%, 95%);
+	--background-100: hsl(203, 27%, 90%);
+	--background-200: hsl(203, 27%, 80%);
 	--background-300: hsl(203, 27%, 70%);
-	--background-400: hsl(204, 27%, 60%);
+	--background-400: hsl(203, 27%, 60%);
 	--background-500: hsl(203, 27%, 50%);
-	--background-600: hsl(204, 27%, 40%);
+	--background-600: hsl(203, 27%, 40%);
 	--background-700: hsl(203, 27%, 30%);
-	--background-800: hsl(204, 27%, 20%);
-	--background-900: hsl(203, 25%, 10%);
-	--background-950: hsl(197, 28%, 5%);
+	--background-800: hsl(203, 27%, 20%);
+	--background-900: hsl(203, 27%, 10%);
+	--background-950: hsl(203, 27%, 5%);
 
 	--primary-50: hsl(204, 47%, 73%, 95%);
 	--primary-100: hsl(204, 47%, 73%, 90%);
