@@ -9,3 +9,7 @@
 .replyAchor:hover {
 	color: var(--text-200);
 }
+
+.manageAnchor {
+	font-size: 0.8rem;
+}

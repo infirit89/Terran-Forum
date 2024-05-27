@@ -30,6 +30,7 @@ namespace TerranForum.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.AddInterceptors(_Services.GetRequiredService<SoftDeleteInterceptor>());
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder builder) 

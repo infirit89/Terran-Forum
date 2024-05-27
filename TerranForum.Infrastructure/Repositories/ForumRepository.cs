@@ -51,42 +51,13 @@ namespace TerranForum.Infrastructure.Repositories
             return await forums.ToListAsync();
         }
 
-        public async Task<Forum?> GetByIdAsync(int id, bool withDeleted = false)
+        public Task<Forum?> GetByIdAsync(int id, bool withDeleted = false)
         {
             IQueryable<Forum> forums = _DbContext.Forums;
             if (withDeleted)
                 forums = forums.IgnoreQueryFilters();
 
-            return await forums
-                .Include(f => f.Posts)
-                    .ThenInclude(p => p.User)
-                .Include(f => f.Posts)
-                    .ThenInclude(p => p.Replies)
-                .Include(f => f.Posts)
-                    .ThenInclude(p => p.Ratings)
-                        .ThenInclude(r => r.User)
-                .Select(f => new Forum
-                {
-                    Id = f.Id,
-                    Title = f.Title,
-                    Posts = f.Posts
-                    .OrderByDescending(p => p.IsMaster)
-                    .ThenByDescending(p => p.CreatedAt)
-                    .Select(p => new Post 
-                    {
-                        Id = p.Id,
-                        Content = p.Content,
-                        UserId = p.UserId,
-                        User = p.User,
-                        CreatedAt = p.CreatedAt,
-                        Replies = p.Replies.OrderByDescending(pr => pr.CreatedAt),
-                        ForumId = p.ForumId,
-                        Forum = p.Forum,
-                        IsMaster = p.IsMaster,
-                        Ratings = p.Ratings.ToArray()
-                    })
-                })
-                .FirstOrDefaultAsync(f => f.Id == id);
+            return forums.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> UpdateAsync(Forum forum)
@@ -126,6 +97,53 @@ namespace TerranForum.Infrastructure.Repositories
             model.IsDeleted = false;
             model.DeletedAt = null;
             return _DbContext.TrySaveAsync();
+        }
+
+        public Task<Forum?> GetByIdWithAllAsync(int forumId, bool withDeleted = false)
+        {
+            IQueryable<Forum> forums = _DbContext.Forums;
+
+            if (withDeleted)
+                forums = forums.IgnoreQueryFilters();
+
+            return forums
+                .Include(f => f.Posts)
+                    .ThenInclude(p => p.User)
+                .Include(f => f.Posts)
+                    .ThenInclude(p => p.Replies)
+                .Include(f => f.Posts)
+                    .ThenInclude(p => p.Ratings)
+                        .ThenInclude(r => r.User)
+                .Select(f => new Forum
+                {
+                    Id = f.Id,
+                    Title = f.Title,
+                    Posts = f.Posts
+                    .OrderByDescending(p => p.IsMaster)
+                    .ThenByDescending(p => p.CreatedAt)
+                    .Select(p => new Post
+                    {
+                        Id = p.Id,
+                        Content = p.Content,
+                        UserId = p.UserId,
+                        User = p.User,
+                        CreatedAt = p.CreatedAt,
+                        Replies = p.Replies.OrderByDescending(pr => pr.CreatedAt),
+                        ForumId = p.ForumId,
+                        Forum = p.Forum,
+                        IsMaster = p.IsMaster,
+                        Ratings = p.Ratings.ToArray()
+                    })
+                })
+                .FirstOrDefaultAsync(f => f.Id == forumId);
+        }
+
+        public Task<Forum?> GetFirstWithAsync(Expression<Func<Forum, bool>> predicate, params Expression<Func<Forum, object>>[] includes)
+        {
+            IQueryable<Forum> forums = _DbContext.Forums;
+            return includes
+                    .Aggregate(forums, (current, include) => current.Include(include))
+                    .FirstOrDefaultAsync(predicate);
         }
 
         private readonly TerranForumDbContext _DbContext;

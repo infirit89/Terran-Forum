@@ -119,8 +119,10 @@ namespace TerranForum.Controllers
         }
 
         [HttpGet, Authorize]
-        public IActionResult GetPostDeleteView(DeletePostViewModel model)
+        public async Task<IActionResult> GetPostDeleteView(DeletePostViewModel model)
         {
+            model.IsMaster = await _PostService.IsMasterPost(model.PostId);
+
             return PartialView(
                 "~/Views/Post/_PostDeletePartial.cshtml",
                 model);
@@ -131,6 +133,9 @@ namespace TerranForum.Controllers
         {
             try
             {
+                if (await _PostService.IsMasterPost(model.PostId))
+                    return StatusCode(500);
+
                 await _PostService.DeletePost(new DeletePostModel
                 {
                     UserId = _UserManager.GetUserId(User),

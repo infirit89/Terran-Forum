@@ -57,7 +57,7 @@ namespace TerranForum.Controllers
 
         public async Task<IActionResult> ViewThread(int forumId)
         {
-            Forum? forum = await _ForumRepository.GetByIdAsync(forumId);
+            Forum? forum = await _ForumRepository.GetByIdWithAllAsync(forumId);
             if (forum == null)
                 return NotFound();
 
@@ -102,6 +102,21 @@ namespace TerranForum.Controllers
             catch (TerranForumException ex)
             {
                 _Logger.LogError("Couldn't create thread");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> Delete(int forumId) 
+        {
+            try
+            {
+                await _ForumService.DeleteForumThread(forumId, _UserManager.GetUserId(User));
+                return RedirectToAction("All", "Forum");
+            }
+            catch (TerranForumException ex)
+            {
+                _Logger.LogError("Couldn't delete forum");
                 return StatusCode(500);
             }
         }

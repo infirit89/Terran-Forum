@@ -10,9 +10,18 @@
                 <p>Are you sure you want to delete your message?</p>
             </div>
             <div class="modal-footer border-0">
-                <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model.PostId" asp-route-forumId="@Model.ForumId">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+                @if (!Model.IsMaster)
+                {
+                    <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model.PostId" asp-route-forumId="@Model.ForumId">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Delete" asp-controller="Forum" asp-route-forumId="@Model.ForumId">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                }
                 <button type="button" class="btn btn-secondary" id="dimissBtn">Close</button>
             </div>
         </div>

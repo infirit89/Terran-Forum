@@ -11,6 +11,12 @@
 {
     <p>@paragraph</p>
 }
+@if (UserManager.GetUserId(User) == Model.UserId)
+{
+    <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
+        <a asp-controller="Post" asp-action="GetPostDeleteView" class="manageAnchor">Delete</a>
+    </div>
+}
 <div class="container-fluid pb-4">
     <div class="d-flex justify-content-end">
         @Model.User.UserName
@@ -40,12 +46,6 @@
         }
     </div>
 </div>
-@if (UserManager.GetUserId(User) == Model.UserId)
-{
-    <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
-        <a asp-controller="Post" asp-action="GetPostDeleteView">Delete</a>
-    </div>
-}
 <div class="container">
     @foreach (var reply in Model.Replies)
     {

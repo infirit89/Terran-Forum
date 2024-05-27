@@ -112,6 +112,14 @@ namespace TerranForum.Infrastructure.Services
                 throw new DeleteModelException();
         }
 
+        public async Task<bool> IsMasterPost(int postId)
+        {
+            Post post = await _PostRepository.GetByIdAsync(postId) ??
+                throw new PostNotFoundException();
+
+            return post.IsMaster;
+        }
+
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
         private readonly IUserRepository _UserRepository;

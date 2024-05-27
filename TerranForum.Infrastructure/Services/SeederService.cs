@@ -65,7 +65,7 @@ namespace TerranForum.Infrastructure.Services
                 TestForumPostData replyPostData = _TestForumPosts[i * 3 + 2];
                 ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
 
-                Forum? forum = await _ForumRepository.GetByIdWithDeletedAsync(testForumData.Id);
+                Forum? forum = await _ForumRepository.GetByIdWithAllAsync(testForumData.Id, true);
 
                 if (forum == null)
                 {
