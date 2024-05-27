@@ -94,6 +94,11 @@ namespace TerranForum.Infrastructure.Services
             return postRating != null ? postRating.Value : 0;
         }
 
+        public Task DeletePost(string userId, int postId)
+        {
+            throw new NotImplementedException();
+        }
+
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
         private readonly IUserRepository _UserRepository;

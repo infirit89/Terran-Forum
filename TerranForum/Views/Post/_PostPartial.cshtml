@@ -3,7 +3,9 @@
 @using TerranForum.Application.Services
 @using System.ComponentModel.DataAnnotations
 @model Post
+
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @foreach (var paragraph in Model.Content.Split("\r\n\r\n"))
 {
@@ -38,6 +40,12 @@
         }
     </div>
 </div>
+@if (UserManager.GetUserId(User) == Model.UserId)
+{
+    <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
+        <a asp-controller="Post" asp-action="GetPostDeleteView">Delete</a>
+    </div>
+}
 <div class="container">
     @foreach (var reply in Model.Replies)
     {

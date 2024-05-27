@@ -118,6 +118,29 @@ namespace TerranForum.Controllers
             }
         }
 
+        [HttpGet, Authorize]
+        public IActionResult GetPostDeleteView(DeletePostViewModel model)
+        {
+            return PartialView(
+                "~/Views/Post/_PostDeletePartial.cshtml",
+                model);
+        }
+
+        [HttpPost, Authorize]
+        public IActionResult Delete(DeletePostViewModel model) 
+        {
+            try
+            {
+                _PostService.DeletePost(_UserManager.GetUserId(User), model.PostId);
+                return RedirectToAction("ViewThread", "Forum", new { ForumId = model.ForumId });
+            }
+            catch (TerranForumException ex)
+            {
+                _Logger.LogError("Couldn't delete post");
+                return StatusCode(500);
+            }
+        }
+
         private readonly ILogger<PostController> _Logger;
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostReplyService _PostReplyService;

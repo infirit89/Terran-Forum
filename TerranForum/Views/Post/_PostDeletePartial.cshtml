@@ -1,0 +1,20 @@
+﻿@model DeletePostViewModel
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Delete?</h1>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your message?</p>
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

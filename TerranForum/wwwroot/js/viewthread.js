@@ -1,4 +1,17 @@
-﻿(function setupRatingButtons() {
+﻿(function setupManageButtons()
+{
+	const manageContainers = document.querySelectorAll('#managePost');
+	for (const manageContainer of manageContainers)
+	{
+		const deleteButton = manageContainer.querySelector('a');
+		const postId = manageContainer.getAttribute('postId');
+		deleteButton.addEventListener('click', (e) => {
+			e.preventDefault();
+		});
+	}
+})();
+
+(function setupRatingButtons() {
 	const ratingModifyContainers = document.querySelectorAll('#ratingModifyContainer');
 
 	for (const ratingModifyContainer of ratingModifyContainers) {

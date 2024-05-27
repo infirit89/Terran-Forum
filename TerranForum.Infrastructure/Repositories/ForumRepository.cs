@@ -48,7 +48,7 @@ namespace TerranForum.Infrastructure.Repositories
                 .Include(f => f.Posts)
                     .ThenInclude(p => p.Ratings)
                         .ThenInclude(r => r.User)
-                .Select(f => new Forum 
+                .Select(f => new Forum
                 {
                     Id = f.Id,
                     Title = f.Title,
