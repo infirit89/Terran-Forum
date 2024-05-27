@@ -25,12 +25,30 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> ExsistsAsync(Expression<Func<PostReply, bool>> predicate)
+        public async Task<bool> ExistsAsync(Expression<Func<PostReply, bool>> predicate, bool withDeleted = false)
         {
-            return await _DbContext.PostReplies.AnyAsync(predicate);
+            IQueryable<PostReply> postReplies = _DbContext.PostReplies;
+
+            if (withDeleted)
+                postReplies = postReplies.IgnoreQueryFilters();
+
+            return await postReplies.AnyAsync(predicate);
         }
 
-        public async Task<IEnumerable<PostReply>> GetAllAsync(Expression<Func<PostReply, bool>>? predicate = null, Ordering<PostReply>? ordering = null)
+        public async Task<IEnumerable<PostReply>> GetAllAsync(Expression<Func<PostReply, bool>>? predicate = null, bool withDeleted = false)
+        {
+            IQueryable<PostReply> postReplies = _DbContext.PostReplies;
+
+            if (withDeleted)
+                postReplies = postReplies.IgnoreQueryFilters();
+
+            if (predicate != null)
+                postReplies = postReplies.Where(predicate);
+
+            return await postReplies.ToListAsync();
+        }
+
+        public async Task<IEnumerable<PostReply>> GetAllOrderedAsync(Expression<Func<PostReply, bool>>? predicate = null, Ordering<PostReply>? ordering = null)
         {
             IQueryable<PostReply> postReplies = _DbContext.PostReplies;
 
@@ -43,12 +61,36 @@ namespace TerranForum.Infrastructure.Repositories
             return await postReplies.ToListAsync();
         }
 
-        public async Task<PostReply?> GetByIdAsync(int id) => await _DbContext.PostReplies.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<PostReply?> GetByIdAsync(int id, bool withDeleted = false)
+        {
+            IQueryable<PostReply> postReplies = _DbContext.PostReplies;
 
+            if (withDeleted)
+                postReplies = postReplies.IgnoreQueryFilters();
+
+            return await postReplies.FirstOrDefaultAsync(x => x.Id == id);
+        }
+        
         public async Task<bool> UpdateAsync(PostReply postReply)
         {
             _DbContext.Update(postReply);
             return await _DbContext.TrySaveAsync();
+        }
+
+        public Task<PostReply?> GetByIdWithDeletedAsync(int id)
+            => GetByIdAsync(id, true);
+
+        public Task<IEnumerable<PostReply>> GetAllWithDeletedAsync(Expression<Func<PostReply, bool>>? predicate = null)
+            => GetAllAsync(predicate, true);
+
+        public Task<bool> ExistsWithDeletedAsync(Expression<Func<PostReply, bool>> predicate)
+            => ExistsAsync(predicate, true);
+
+        public Task<bool> UndoDeleteAsync(PostReply model)
+        {
+            model.IsDeleted = false;
+            model.DeletedAt = null;
+            return _DbContext.TrySaveAsync();
         }
 
         private readonly TerranForumDbContext _DbContext;

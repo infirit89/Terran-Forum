@@ -31,7 +31,6 @@ namespace TerranForum.Infrastructure.Services
             _ForumRepository = forumRepository;
             _ForumService = forumService;
             _PostService = postService;
-            _PostReplyRepository = postReplyRepository;
             _PostReplyService = postReplyService;
         }
 
@@ -66,18 +65,18 @@ namespace TerranForum.Infrastructure.Services
                 TestForumPostData replyPostData = _TestForumPosts[i * 3 + 2];
                 ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
 
-                Forum? forum = await _ForumRepository.GetByIdAsync(testForumData.Id);
+                Forum? forum = await _ForumRepository.GetByIdWithDeletedAsync(testForumData.Id);
 
                 if (forum == null)
                 {
-                    CreateForumModel createForumModel = new() 
+                    CreateForumModel createForumModel = new()
                     {
                         Title = testForumData.Title,
                         Content = masterPostData.Content,
                         UserId = user.Id
                     };
                     forum = await _ForumService.CreateForumThreadAsync(createForumModel);
-                    if(forum == null)
+                    if (forum == null)
                     {
                         _Logger.LogCritical("Couldn't seed forum");
                         return;
@@ -92,10 +91,17 @@ namespace TerranForum.Infrastructure.Services
                     };
                     await _PostReplyService.AddPostReply(createPostReplyModel);
                 }
-
-                if (!await _PostRepository.ExsistsAsync(x => x.Id == answerPostData.Id))
+                else 
                 {
-                    CreatePostModel createPostModel = new() 
+                    await _ForumRepository.UndoDeleteAsync(forum);
+                    await _PostRepository.UndoDeleteAsync(forum.Posts.First(x => x.IsMaster));
+                }
+
+                Post? post = await _PostRepository.GetByIdWithDeletedAsync(answerPostData.Id);
+
+                if (post == null)
+                {
+                    CreatePostModel createPostModel = new()
                     {
                         Content = answerPostData.Content,
                         UserId = user.Id,
@@ -103,6 +109,10 @@ namespace TerranForum.Infrastructure.Services
                     };
 
                     await _PostService.AddPostToThread(createPostModel);
+                }
+                else 
+                {
+                    await _PostRepository.UndoDeleteAsync(post);
                 }
             }
         }
@@ -132,7 +142,7 @@ namespace TerranForum.Infrastructure.Services
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
-        private readonly IPostReplyRepository _PostReplyRepository;
+        private readonly IUserRepository _UserRepository;
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";

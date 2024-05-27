@@ -26,7 +26,20 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<IEnumerable<Forum>> GetAllAsync(Expression<Func<Forum, bool>>? predicate = null, Ordering<Forum>? ordering = null)
+        public async Task<IEnumerable<Forum>> GetAllAsync(Expression<Func<Forum, bool>>? predicate = null, bool withDeleted = false)
+        {
+            IQueryable<Forum> forums = _DbContext.Forums;
+
+            if (withDeleted)
+                forums = forums.IgnoreQueryFilters();
+
+            if (predicate != null)
+                forums = forums.Where(predicate);
+
+            return await forums.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Forum>> GetAllOrderedAsync(Expression<Func<Forum, bool>>? predicate = null, Ordering<Forum>? ordering = null) 
         {
             IQueryable<Forum> forums = _DbContext.Forums;
             if (predicate != null)
@@ -38,9 +51,13 @@ namespace TerranForum.Infrastructure.Repositories
             return await forums.ToListAsync();
         }
 
-        public async Task<Forum?> GetByIdAsync(int id)
+        public async Task<Forum?> GetByIdAsync(int id, bool withDeleted = false)
         {
-            return await _DbContext.Forums
+            IQueryable<Forum> forums = _DbContext.Forums;
+            if (withDeleted)
+                forums = forums.IgnoreQueryFilters();
+
+            return await forums
                 .Include(f => f.Posts)
                     .ThenInclude(p => p.User)
                 .Include(f => f.Posts)
@@ -87,11 +104,30 @@ namespace TerranForum.Infrastructure.Repositories
             };
         }
 
-        public async Task<bool> ExsistsAsync(Expression<Func<Forum, bool>> predicate)
+        public async Task<bool> ExistsAsync(Expression<Func<Forum, bool>> predicate, bool withDeleted = false)
         {
-            return await _DbContext.Forums.AnyAsync(predicate);
+            IQueryable<Forum> forums = _DbContext.Forums;
+
+            if (withDeleted)
+                forums = forums.IgnoreQueryFilters();
+
+            return await forums.AnyAsync(predicate);
         }
-        
+
+        public Task<Forum?> GetByIdWithDeletedAsync(int id) => GetByIdAsync(id, true);
+        public Task<IEnumerable<Forum>> GetAllWithDeletedAsync(Expression<Func<Forum, bool>>? predicate = null)
+            => GetAllAsync(predicate, true);
+
+        public Task<bool> ExistsWithDeletedAsync(Expression<Func<Forum, bool>> predicate)
+            => ExistsAsync(predicate, true);
+
+        public Task<bool> UndoDeleteAsync(Forum model)
+        {
+            model.IsDeleted = false;
+            model.DeletedAt = null;
+            return _DbContext.TrySaveAsync();
+        }
+
         private readonly TerranForumDbContext _DbContext;
     }
 }

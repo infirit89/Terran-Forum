@@ -17,8 +17,15 @@
 					const mainContainer = document.querySelector('main');
 					const parsedDom = parser.parseFromString(responseText, "text/html");
 					mainContainer.appendChild(parsedDom.querySelector('div'));
-					const deleteModal = new bootstrap.Modal('#deleteModal');
-					deleteModal.toggle();
+					const deleteModal = mainContainer.querySelector('#deleteModal');
+					const modal = new bootstrap.Modal(deleteModal);
+
+					deleteModal.querySelector('#dimissBtn').addEventListener('click', () => {
+						modal.hide();
+						mainContainer.removeChild(deleteModal);
+					});
+
+					modal.toggle();
 				})
 				.catch(error => console.error(error));
 		});

@@ -25,12 +25,34 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> ExsistsAsync(Expression<Func<Post, bool>> predicate)
+        public async Task<bool> ExistsAsync(Expression<Func<Post, bool>> predicate, bool withDeleted = false)
         {
-            return await _DbContext.Posts.AnyAsync(predicate);
+            IQueryable<Post> posts = _DbContext.Posts;
+
+            if (withDeleted)
+                posts = posts.IgnoreQueryFilters();
+
+            return await posts.AnyAsync(predicate);
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync(Expression<Func<Post, bool>>? predicate = null, Ordering<Post>? ordering = null)
+        public async Task<IEnumerable<Post>> GetAllAsync(
+            Expression<Func<Post, bool>>? predicate = null,
+            bool withDeleted = false)
+        {
+            IQueryable<Post> posts = _DbContext.Posts;
+
+            if (withDeleted)
+                posts = posts.IgnoreQueryFilters();
+
+            if (predicate != null)
+                posts = posts.Where(predicate);
+
+            return await posts.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Post>> GetAllOrderedAsync(
+            Expression<Func<Post, bool>>? predicate = null,
+            Ordering<Post>? ordering = null)
         {
             IQueryable<Post> posts = _DbContext.Posts;
 
@@ -43,7 +65,14 @@ namespace TerranForum.Infrastructure.Repositories
             return await posts.ToListAsync();
         }
 
-        public async Task<Post?> GetByIdAsync(int id) => await _DbContext.Posts.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<Post?> GetByIdAsync(int id, bool withDeleted = false)
+        {
+            IQueryable<Post> posts = _DbContext.Posts;
+            if (withDeleted)
+                posts = posts.IgnoreQueryFilters();
+
+            return await posts.FirstOrDefaultAsync(x => x.Id == id);
+        }
 
         public async Task<bool> UpdateAsync(Post post)
         {
@@ -57,6 +86,22 @@ namespace TerranForum.Infrastructure.Repositories
             return includes
                     .Aggregate(posts, (current, include) => current.Include(include))
                     .FirstOrDefaultAsync(predicate);
+        }
+
+        public Task<Post?> GetByIdWithDeletedAsync(int id)
+            => GetByIdAsync(id, true);
+
+        public Task<IEnumerable<Post>> GetAllWithDeletedAsync(Expression<Func<Post, bool>>? predicate = null)
+            => GetAllAsync(predicate, true);
+
+        public Task<bool> ExistsWithDeletedAsync(Expression<Func<Post, bool>> predicate)
+            => ExistsAsync(predicate, true);
+
+        public Task<bool> UndoDeleteAsync(Post model)
+        {
+            model.IsDeleted = false;
+            model.DeletedAt = null;
+            return _DbContext.TrySaveAsync();
         }
 
         private readonly TerranForumDbContext _DbContext;

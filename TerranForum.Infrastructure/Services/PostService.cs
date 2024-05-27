@@ -22,7 +22,7 @@ namespace TerranForum.Infrastructure.Services
 
         public async Task<Post> AddPostToThread(CreatePostModel createPostModel)
         {
-            if (!await _ForumRepository.ExsistsAsync(x => x.Id == createPostModel.ForumId))
+            if (!await _ForumRepository.ExistsAsync(x => x.Id == createPostModel.ForumId))
                 throw new ForumNotFoundException();
 
             if (!await _UserRepository.ExsistsAsync(x => x.Id == createPostModel.UserId))
@@ -45,7 +45,7 @@ namespace TerranForum.Infrastructure.Services
 
         public async Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel)
         {
-            if (!await _PostRepository.ExsistsAsync(x => x.Id == updatePostRatingModel.PostId))
+            if (!await _PostRepository.ExistsAsync(x => x.Id == updatePostRatingModel.PostId))
                 throw new PostNotFoundException();
 
             if (!await _UserRepository.ExsistsAsync(x => x.Id == updatePostRatingModel.UserId))
@@ -96,7 +96,7 @@ namespace TerranForum.Infrastructure.Services
 
         public async Task DeletePost(DeletePostModel deletePostModel)
         {
-            if (!await _ForumRepository.ExsistsAsync(x => x.Id == deletePostModel.ForumId))
+            if (!await _ForumRepository.ExistsAsync(x => x.Id == deletePostModel.ForumId))
                 throw new ForumNotFoundException();
 
             if (!await _UserRepository.ExsistsAsync(x => x.Id == deletePostModel.UserId))

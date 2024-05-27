@@ -20,7 +20,7 @@ namespace TerranForum.Infrastructure.Services
 
         public async Task<PostReply> AddPostReply(CreatePostReplyModel createPostReplyModel)
         {
-            if (!await _PostRepository.ExsistsAsync(x => x.Id == createPostReplyModel.PostId))
+            if (!await _PostRepository.ExistsAsync(x => x.Id == createPostReplyModel.PostId))
                 throw new PostNotFoundException();
 
             if (!await _UserRepository.ExsistsAsync(x => x.Id == createPostReplyModel.UserId))
