@@ -45,7 +45,20 @@ nav {
 }
 
 a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent-lighter);
+}
+
+.footer-link {
     color: var(--text-color);
+}
+
+.footer-link:hover {
+    color: var(--text-200);
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -75,14 +88,15 @@ p {
 }
 
 .forum-title {
+    color: var(--text-color);
     display: block;
     text-decoration: none;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
 }
 
 .forum-title:hover {
-/*    color: var(--text-200);*/
-    color: var(--text-color);
+    color: var(--text-200);
+/*    color: var(--text-color);*/
 }
 
 .col-sm-1 {
@@ -172,4 +186,9 @@ textarea {
 
 .link-button:hover {
     background-color: var(--accent-800);
+}
+
+.flex-center {
+    justify-content: center !important;
+    align-items: center !important;
 }

@@ -19,9 +19,19 @@ namespace TerranForum.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? statusCode = null)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode is not null) 
+            {
+                switch (statusCode) 
+                {
+                    case 404:
+                    case 500:
+                        return View($"Errors/Error{statusCode}");
+                }
+            }
+
+            return View("Errors/Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         private readonly ILogger<HomeController> _Logger;
