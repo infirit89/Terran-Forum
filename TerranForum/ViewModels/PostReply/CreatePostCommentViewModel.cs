@@ -1,17 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TerranForum.Domain.Models;
 
-namespace TerranForum.Models
+namespace TerranForum.ViewModels.PostReply
 {
-    public class CreatePostViewModel
+    public class CreatePostCommentViewModel
     {
         [Required]
-        [Display(Name = "post")]
+        [Display(Name = "comment")]
         [StringLength(
-        Constants.MaxPostContentSize, 
+        Constants.MaxPostReplyContentSize,
         ErrorMessage = ErrorMessages.CreateErrorMessage,
-        MinimumLength = Constants.MinPostContentSize)]
+        MinimumLength = Constants.MinPostReplyContentSize)]
         public string Content { get; set; } = null!;
+
+        [Required]
+        public int PostId { get; set; }
         [Required]
         public int ForumId { get; set; }
     }

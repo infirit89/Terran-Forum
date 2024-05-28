@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TerranForum.Models;
+using TerranForum.ViewModels;
 
 namespace TerranForum.Controllers
 {

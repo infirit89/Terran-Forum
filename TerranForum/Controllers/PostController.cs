@@ -6,7 +6,8 @@ using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
-using TerranForum.Models;
+using TerranForum.ViewModels.Post;
+using TerranForum.ViewModels.PostReply;
 
 namespace TerranForum.Controllers
 {
@@ -54,11 +55,11 @@ namespace TerranForum.Controllers
             });
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public IActionResult GetCreatePostReplyView(int forumId, int postId)
         {
             return PartialView(
-                "~/Views/PostReply/_CreatePostReplyPartial.cshtml",
+                "~/Views/PostReply/_CreatePartial.cshtml",
                 new CreatePostCommentViewModel()
                 {
                     PostId = postId,
@@ -124,7 +125,7 @@ namespace TerranForum.Controllers
             model.IsMaster = await _PostService.IsMasterPost(model.PostId);
 
             return PartialView(
-                "~/Views/Post/_PostDeletePartial.cshtml",
+                "~/Views/Post/_DeletePartial.cshtml",
                 model);
         }
 

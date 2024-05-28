@@ -3,7 +3,7 @@
 	const parser = new DOMParser();
 	const manageContainers = document.querySelectorAll('#managePost');
 	for (const manageContainer of manageContainers) {
-		const deleteButton = manageContainer.querySelector('a');
+		const deleteButton = manageContainer.querySelector('#deleteBtn');
 		const forumId = manageContainer.getAttribute('forumId');
 		const postId = manageContainer.getAttribute('postId');
 		deleteButton.addEventListener('click', (e) => {

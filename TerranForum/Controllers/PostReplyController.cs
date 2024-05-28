@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
-using TerranForum.Models;
 using TerranForum.Application.Dtos.PostReplyDtos;
 using Microsoft.AspNetCore.Identity;
 using TerranForum.Domain.Models;
 using TerranForum.Application.Repositories;
+using TerranForum.ViewModels.PostReply;
 
 namespace TerranForum.Controllers
 {
@@ -26,7 +26,7 @@ namespace TerranForum.Controllers
         public IActionResult GetPostReplyDeleteView(DeletePostReplyViewModel deletePostReplyViewModel)
         {
             return PartialView(
-                "~/Views/PostReply/_PostReplyDeletePartial.cshtml",
+                "~/Views/PostReply/_DeletePartial.cshtml",
                 deletePostReplyViewModel);
         }
 

@@ -14,7 +14,7 @@
 @if (UserManager.GetUserId(User) == Model.UserId)
 {
     <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
-        <a asp-controller="Post" asp-action="GetPostDeleteView" class="danger-anchor">Delete</a>
+        <a asp-controller="Post" asp-action="GetPostDeleteView" class="danger-anchor" id="deleteBtn">Delete</a>
     </div>
 }
 <div class="container-fluid pb-4">
@@ -50,7 +50,7 @@
     @foreach (var reply in Model.Replies)
     {
         await Html.RenderPartialAsync(
-            "~/Views/PostReply/_PostReplyPartial.cshtml",
+            "~/Views/PostReply/_ViewPartial.cshtml",
             reply);
     }
     <div id="createReply">

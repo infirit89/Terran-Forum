@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TerranForum.Domain.Models;
 
-namespace TerranForum.Models
+namespace TerranForum.ViewModels.Forum
 {
     public class CreateForumViewModel
     {

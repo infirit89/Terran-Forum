@@ -1,4 +1,4 @@
-﻿namespace TerranForum.Models
+﻿namespace TerranForum.ViewModels
 {
     public static class ErrorMessages
     {

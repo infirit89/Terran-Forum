@@ -6,7 +6,7 @@ using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
-using TerranForum.Models;
+using TerranForum.ViewModels.Forum;
 
 namespace TerranForum.Controllers
 {

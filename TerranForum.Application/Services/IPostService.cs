@@ -10,5 +10,6 @@ namespace TerranForum.Application.Services
         Task<int> GetUserRating(string userId, int postId);
         Task DeletePost(DeletePostModel deletePostModel);
         Task<bool> IsMasterPost(int postId);
+        Task<bool> UpdatePost(UpdatePostModel updatePostModel);
     }
 }
