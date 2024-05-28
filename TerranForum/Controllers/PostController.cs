@@ -17,12 +17,14 @@ namespace TerranForum.Controllers
             ILogger<PostController> logger,
             UserManager<ApplicationUser> userManager,
             IPostReplyService postReplyService,
-            IPostService postService)
+            IPostService postService,
+            IPostRepository postRepository)
         {
             _Logger = logger;
             _UserManager = userManager;
             _PostReplyService = postReplyService;
             _PostService = postService;
+            _PostRepository = postRepository;
         }
 
         [HttpPost, Authorize]
@@ -43,7 +45,7 @@ namespace TerranForum.Controllers
                     PostId = createPostCommentViewModel.PostId
                 });
             }
-            catch (TerranForumException ex)
+            catch (TerranForumException)
             {
                 _Logger.LogError("Couldn't create post reply");
                 return StatusCode(500);
@@ -122,11 +124,19 @@ namespace TerranForum.Controllers
         [HttpGet, Authorize]
         public async Task<IActionResult> GetPostDeleteView(DeletePostViewModel model)
         {
-            model.IsMaster = await _PostService.IsMasterPost(model.PostId);
+            try
+            {
+                model.IsMaster = await _PostService.IsMasterPost(model.PostId);
 
-            return PartialView(
-                "~/Views/Post/_DeletePartial.cshtml",
-                model);
+                return PartialView(
+                    "~/Views/Post/_DeletePartial.cshtml",
+                    model);
+            }
+            catch (PostNotFoundException) 
+            {
+                _Logger.LogError("Couldn't find the post to delete");
+                return StatusCode(404);
+            }
         }
 
         [HttpPost, Authorize]
@@ -146,9 +156,52 @@ namespace TerranForum.Controllers
 
                 return RedirectToAction("ViewThread", "Forum", new { ForumId = model.ForumId });
             }
-            catch (TerranForumException ex)
+            catch (TerranForumException)
             {
                 _Logger.LogError("Couldn't delete post");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet, Authorize]
+        public async Task<IActionResult> Edit(int postId) 
+        {
+            Post? post = await _PostRepository
+                .GetFirstWithAsync(
+                    x => x.Id == postId
+                    && x.UserId == _UserManager.GetUserId(User));
+
+            if (post is null)
+                return StatusCode(404);
+
+            return View(new EditPostViewModel
+            {
+                PostId = postId,
+                Content = post.Content,
+                ForumId = post.ForumId
+            });
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> Edit(EditPostViewModel editPostViewModel) 
+        {
+            try
+            {
+                if (await _PostService.IsMasterPost(editPostViewModel.PostId))
+                    return StatusCode(500);
+
+                await _PostService.UpdatePost(new UpdatePostModel
+                {
+                    PostId = editPostViewModel.PostId,
+                    UserId = _UserManager.GetUserId(User),
+                    PostContent = editPostViewModel.Content
+                });
+
+                return RedirectToAction("ViewThread", "Forum", new { ForumId = editPostViewModel.ForumId });
+            }
+            catch (TerranForumException)
+            {
+                _Logger.LogError("Couldn't update the post");
                 return StatusCode(500);
             }
         }
@@ -157,5 +210,6 @@ namespace TerranForum.Controllers
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostReplyService _PostReplyService;
         private readonly IPostService _PostService;
+        private readonly IPostRepository _PostRepository;
     }
 }

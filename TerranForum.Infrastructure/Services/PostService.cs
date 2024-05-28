@@ -121,7 +121,7 @@ namespace TerranForum.Infrastructure.Services
             return post.IsMaster;
         }
 
-        public async Task<bool> UpdatePost(UpdatePostModel updatePostModel)
+        public async Task UpdatePost(UpdatePostModel updatePostModel)
         {
             if (!await _UserRepository.ExsistsAsync(x => x.Id == updatePostModel.UserId))
                 throw new UserNotFoundException();
@@ -133,7 +133,8 @@ namespace TerranForum.Infrastructure.Services
                 ?? throw new PostNotFoundException();
 
             post.Content = updatePostModel.PostContent;
-            return await _PostRepository.UpdateAsync(post);
+            if (!await _PostRepository.UpdateAsync(post))
+                throw new UpdateModelException();
         }
 
         private readonly IPostRepository _PostRepository;

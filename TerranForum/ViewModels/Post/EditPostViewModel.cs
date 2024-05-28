@@ -14,5 +14,6 @@ namespace TerranForum.ViewModels.Post
         public string Content { get; set; } = null!;
 
         public int PostId { get; set; }
+        public int ForumId { get; set; }
     }
 }

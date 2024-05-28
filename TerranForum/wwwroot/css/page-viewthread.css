@@ -19,3 +19,12 @@
 .danger-anchor:hover {
 	color: var(--secondary-lighter);
 }
+
+.secondary-anchor {
+	font-size: 0.8rem;
+	color: var(--text-300);
+}
+
+.secondary-anchor:hover {
+	color: var(--text-200);
+}

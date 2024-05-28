@@ -1,1 +1,17 @@
-﻿
+﻿@using TerranForum.ViewModels.Post
+@model EditPostViewModel
+
+<form method="post" asp-controller="Post" asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-floating pb-1">
+        <textarea rows="8" asp-for="Content" type="text"></textarea> <br />
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <button type="submit" class="button primary-button">Save Edits</button>
+    <input asp-for="PostId" type="hidden" />
+    <input asp-for="ForumId" type="hidden"/>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
