@@ -25,7 +25,6 @@ body {
   color: var(--text-color);
 }
 
-
 nav {
     background-color: var(--background-color);
 }
@@ -95,16 +94,57 @@ textarea {
     resize: vertical;
 }
 
+.button {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--primary-color);
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
 .primary-button {
-    color: rgb(11, 16, 19);
+    color: var(--background-color);
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+}
+
+.primary-button:hover {
+    background-color: var(--primary-lighter);
+    border-color: var(--primary-lighter);
+}
+
+.primary-button:active {
+    background-color: var(--primary-lightest);
+    border-color: var(--primary-lightest);
+}
+
+.danger-button {
+    color: var(--text-color);
+    background-color: var(--secondary-red-color);
+    border-color: var(--secondary-red-color);
+}
+
+.danger-button:hover {
+    background-color: var(--secondary-lighter);
+    border-color: var(--secondary-lighter);
 }
 
 .light-button-outline {
     color: var(--text-color);
     background-color: var(--secondary-700);
-/*    border-color: var(--secondary-700);*/
+    border-color: var(--secondary-700);
     padding: .2rem .4rem;
 }
 
@@ -122,4 +162,14 @@ textarea {
 .delete-modal {
     background-color: var(--background-800);
     color: var(--text-color);
+}
+
+.link-button {
+    color: var(--accent-color);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.link-button:hover {
+    background-color: var(--accent-800);
 }

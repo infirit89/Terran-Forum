@@ -102,11 +102,12 @@ namespace TerranForum.Infrastructure.Services
             if (!await _UserRepository.ExsistsAsync(x => x.Id == deletePostModel.UserId))
                 throw new UserNotFoundException();
 
-            Post post = await _PostRepository.GetByIdAsync(deletePostModel.PostId) 
+            Post post = await _PostRepository
+                .GetFirstWithAsync(
+                    x => x.Id == deletePostModel.PostId
+                    && x.ForumId == deletePostModel.ForumId
+                    && x.UserId == deletePostModel.UserId)
                 ?? throw new PostNotFoundException();
-
-            if (post.UserId != deletePostModel.UserId)
-                throw new NotCorrectUserException();
 
             if (!await _PostRepository.DeleteAsync(post))
                 throw new DeleteModelException();

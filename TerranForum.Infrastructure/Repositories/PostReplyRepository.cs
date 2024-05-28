@@ -93,6 +93,11 @@ namespace TerranForum.Infrastructure.Repositories
             return _DbContext.TrySaveAsync();
         }
 
+        public Task<PostReply?> GetFirstAsync(Expression<Func<PostReply, bool>> predicate)
+        {
+            return _DbContext.PostReplies.FirstOrDefaultAsync(predicate);
+        }
+
         private readonly TerranForumDbContext _DbContext;
     }
 }

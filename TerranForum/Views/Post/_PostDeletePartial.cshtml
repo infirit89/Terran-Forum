@@ -4,7 +4,14 @@
     <div class="modal-dialog">
         <div class="modal-content delete-modal">
             <div class="modal-header border-0">
-                <h1 class="modal-title fs-5">Delete?</h1>
+                @if (!Model.IsMaster)
+                {
+                    <h1 class="modal-title fs-3">Delete your answer?</h1>
+                }
+                else
+                {
+                    <h1 class="modal-title fs-3">Delete thread?</h1>
+                }
             </div>
             <div class="modal-body border-0">
                 <p>Are you sure you want to delete your message?</p>
@@ -13,16 +20,16 @@
                 @if (!Model.IsMaster)
                 {
                     <form asp-action="Delete" asp-controller="Post" asp-route-postId="@Model.PostId" asp-route-forumId="@Model.ForumId">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="button danger-button fs-10">Delete</button>
                     </form>
                 }
                 else
                 {
                     <form asp-action="Delete" asp-controller="Forum" asp-route-forumId="@Model.ForumId">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="button danger-button fs-11">Delete</button>
                     </form>
                 }
-                <button type="button" class="btn btn-secondary" id="dimissBtn">Close</button>
+                <button type="button" class="button link-button fs-11" id="dimissBtn">Close</button>
             </div>
         </div>
     </div>

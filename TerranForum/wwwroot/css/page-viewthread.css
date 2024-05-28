@@ -10,6 +10,12 @@
 	color: var(--text-200);
 }
 
-.manageAnchor {
+.danger-anchor {
 	font-size: 0.8rem;
+	color: var(--secondary-red-color);
+	text-decoration: none;
+}
+
+.danger-anchor:hover {
+	color: var(--secondary-lighter);
 }

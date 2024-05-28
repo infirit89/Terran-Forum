@@ -3,8 +3,9 @@
 	--background-color: rgb(11, 16, 19);
 	--primary-color: rgb(155, 193, 219);
 	--secondary-color: rgb(31, 100, 148);
+	--secondary-red-color: #c81e4b;
 	--accent-color: rgb(25, 149, 235);
-
+	--accent-red-color: rgb(208, 79, 147);
 	--text-50: hsl(220, 10%, 94%, 95%);
 	--text-100: hsl(220, 10%, 94%, 90%);
 	--text-200: hsl(220, 10%, 94%, 80%);
@@ -16,7 +17,6 @@
 	--text-800: hsl(220, 10%, 94%, 20%);
 	--text-900: hsl(220, 10%, 94%, 10%);
 	--text-950: hsl(220, 10%, 94%, 5%);
-
 	--background-50: hsl(203, 27%, 95%);
 	--background-100: hsl(203, 27%, 90%);
 	--background-200: hsl(203, 27%, 80%);
@@ -28,7 +28,6 @@
 	--background-800: hsl(203, 27%, 20%);
 	--background-900: hsl(203, 27%, 10%);
 	--background-950: hsl(203, 27%, 5%);
-
 	--primary-50: hsl(204, 47%, 73%, 95%);
 	--primary-100: hsl(204, 47%, 73%, 90%);
 	--primary-200: hsl(204, 47%, 73%, 80%);
@@ -40,7 +39,6 @@
 	--primary-800: hsl(204, 47%, 73%, 20%);
 	--primary-900: hsl(204, 47%, 73%, 10%);
 	--primary-950: hsl(204, 47%, 73%, 5%);
-
 	--secondary-50: hsl(205, 65%, 35%, 95%);
 	--secondary-100: hsl(205, 65%, 35%, 90%);
 	--secondary-200: hsl(205, 65%, 35%, 80%);
@@ -52,7 +50,6 @@
 	--secondary-800: hsl(205, 65%, 35%, 20%);
 	--secondary-900: hsl(205, 65%, 35%, 10%);
 	--secondary-950: hsl(205, 65%, 35%, 5%);
-
 	--accent-50: hsl(205, 84%, 51%, 95%);
 	--accent-100: hsl(205, 84%, 51%, 90%);
 	--accent-200: hsl(205, 84%, 51%, 80%);
@@ -64,4 +61,7 @@
 	--accent-800: hsl(205, 84%, 51%, 20%);
 	--accent-900: hsl(205, 84%, 51%, 10%);
 	--accent-950: hsl(205, 84%, 51%, 5%);
+	--primary-lighter: #b4d1e4;
+	--primary-lightest: #c7dceb;
+	--secondary-lighter: #e13765;
 }

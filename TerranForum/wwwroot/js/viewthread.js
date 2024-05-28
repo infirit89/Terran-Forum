@@ -2,8 +2,7 @@
 {
 	const parser = new DOMParser();
 	const manageContainers = document.querySelectorAll('#managePost');
-	for (const manageContainer of manageContainers)
-	{
+	for (const manageContainer of manageContainers) {
 		const deleteButton = manageContainer.querySelector('a');
 		const forumId = manageContainer.getAttribute('forumId');
 		const postId = manageContainer.getAttribute('postId');
@@ -16,6 +15,38 @@
 				{
 					const mainContainer = document.querySelector('main');
 					const parsedDom = parser.parseFromString(responseText, "text/html");
+					mainContainer.appendChild(parsedDom.querySelector('div'));
+					const deleteModal = mainContainer.querySelector('#deleteModal');
+					const modal = new bootstrap.Modal(deleteModal);
+
+					deleteModal.querySelector('#dimissBtn').addEventListener('click', () => {
+						modal.hide();
+						mainContainer.removeChild(deleteModal);
+					});
+
+					modal.toggle();
+				})
+				.catch(error => console.error(error));
+		});
+	}
+
+	const replyManageContainers = document.querySelectorAll('#manageReply');
+	for (const manageContainer of replyManageContainers) {
+		const postId = manageContainer.getAttribute('postId');
+		console.log(postId);
+		const replyId = manageContainer.getAttribute('replyId');
+		console.log(replyId);
+
+		const deleteButton = manageContainer.querySelector('a');
+		deleteButton.addEventListener('click', (e) => {
+			e.preventDefault();
+
+			fetch(`${deleteButton.href}?postId=${postId}&replyId=${replyId}`)
+				.then(response => response.status == 200 ? response.text() : '')
+				.then((responseText) => {
+					const mainContainer = document.querySelector('main');
+					const parsedDom = parser.parseFromString(responseText, "text/html");
+					console.log(parsedDom);
 					mainContainer.appendChild(parsedDom.querySelector('div'));
 					const deleteModal = mainContainer.querySelector('#deleteModal');
 					const modal = new bootstrap.Modal(deleteModal);

@@ -12,7 +12,6 @@ namespace TerranForum.Infrastructure.Services
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default)
         {
-            Console.WriteLine("cum cum cum cum cum cum");
             if(eventData.Context is null)
                 return base.SavingChangesAsync(eventData, result, cancellationToken);
 

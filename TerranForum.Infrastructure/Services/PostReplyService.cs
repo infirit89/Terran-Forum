@@ -40,6 +40,25 @@ namespace TerranForum.Infrastructure.Services
             throw new CreateModelException();
         }
 
+        public async Task DeletePostReplyAsync(DeletePostReplyModel deletePostReplyModel)
+        {
+            if(!await _PostRepository.ExistsAsync(x => x.Id == deletePostReplyModel.PostId))
+                throw new PostNotFoundException();
+
+            if (!await _UserRepository.ExsistsAsync(x => x.Id == deletePostReplyModel.UserId))
+                throw new UserNotFoundException();
+
+            PostReply postReply = await _PostReplyRepository
+                .GetFirstAsync(
+                    x => x.Id == deletePostReplyModel.ReplyId 
+                    && x.PostId == deletePostReplyModel.PostId
+                    && x.UserId == deletePostReplyModel.UserId)
+                ?? throw new PostReplyNotFoundException();
+
+            if (!await _PostReplyRepository.DeleteAsync(postReply))
+                throw new DeleteModelException();
+        }
+
         private readonly IPostReplyRepository _PostReplyRepository;
         private readonly IPostRepository _PostRepository;
         private readonly IUserRepository _UserRepository;

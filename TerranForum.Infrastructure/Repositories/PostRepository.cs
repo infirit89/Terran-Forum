@@ -19,20 +19,20 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> DeleteAsync(Post post)
+        public Task<bool> DeleteAsync(Post post)
         {
             _DbContext.Posts.Remove(post);
-            return await _DbContext.TrySaveAsync();
+            return _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> ExistsAsync(Expression<Func<Post, bool>> predicate, bool withDeleted = false)
+        public Task<bool> ExistsAsync(Expression<Func<Post, bool>> predicate, bool withDeleted = false)
         {
             IQueryable<Post> posts = _DbContext.Posts;
 
             if (withDeleted)
                 posts = posts.IgnoreQueryFilters();
 
-            return await posts.AnyAsync(predicate);
+            return posts.AnyAsync(predicate);
         }
 
         public async Task<IEnumerable<Post>> GetAllAsync(
@@ -65,19 +65,19 @@ namespace TerranForum.Infrastructure.Repositories
             return await posts.ToListAsync();
         }
 
-        public async Task<Post?> GetByIdAsync(int id, bool withDeleted = false)
+        public Task<Post?> GetByIdAsync(int id, bool withDeleted = false)
         {
             IQueryable<Post> posts = _DbContext.Posts;
             if (withDeleted)
                 posts = posts.IgnoreQueryFilters();
 
-            return await posts.FirstOrDefaultAsync(x => x.Id == id);
+            return posts.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(Post post)
+        public Task<bool> UpdateAsync(Post post)
         {
             _DbContext.Update(post);
-            return await _DbContext.TrySaveAsync();
+            return _DbContext.TrySaveAsync();
         }
 
         public Task<Post?> GetFirstWithAsync(Expression<Func<Post, bool>> predicate, params Expression<Func<Post, object>>[] includes)
@@ -101,6 +101,12 @@ namespace TerranForum.Infrastructure.Repositories
         {
             model.IsDeleted = false;
             model.DeletedAt = null;
+            return _DbContext.TrySaveAsync();
+        }
+
+        public Task<bool> DeleteRangeAsync(IEnumerable<Post> posts)
+        {
+            _DbContext.RemoveRange(posts);
             return _DbContext.TrySaveAsync();
         }
 

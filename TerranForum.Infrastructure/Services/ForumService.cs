@@ -3,7 +3,6 @@ using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Models;
 using TerranForum.Domain.Exceptions;
-using TerranForum.Application.Dtos.PostDtos;
 
 namespace TerranForum.Infrastructure.Services
 {
@@ -61,14 +60,19 @@ namespace TerranForum.Infrastructure.Services
 
         public async Task DeleteForumThread(int forumId, string userId)
         {
-            Forum? forum = await _ForumRepository.GetFirstWithAsync(x => x.Id == forumId, x => x.Posts);
-
-            if (forum == null)
-                throw new ForumNotFoundException();
-
             if (!await _UserRepository.ExsistsAsync(x => x.Id == userId))
                 throw new UserNotFoundException();
 
+            if (!await _PostRepository.ExistsAsync(x => x.ForumId == forumId && x.IsMaster && x.UserId == userId))
+                throw new PostNotFoundException();
+
+            Forum forum = await _ForumRepository
+                .GetFirstWithAsync(
+                    x => x.Id == forumId)
+                ?? throw new ForumNotFoundException();
+
+
+            // NOTE: maybe delete master post as well?
             //Post masterPost = await _PostRepository
             //    .GetFirstWithAsync(
             //        x => x.ForumId == forumId && x.IsMaster && x.UserId == userId, x => x.Replies)
@@ -82,12 +86,6 @@ namespace TerranForum.Infrastructure.Services
 
             //if (!await _PostRepository.DeleteAsync(masterPost))
             //    throw new DeleteModelException();
-
-            foreach (var post in forum.Posts)
-            {
-                if (!await _PostRepository.DeleteAsync(post))
-                    throw new DeleteModelException();
-            }
 
             if (!await _ForumRepository.DeleteAsync(forum))
                 throw new DeleteModelException();

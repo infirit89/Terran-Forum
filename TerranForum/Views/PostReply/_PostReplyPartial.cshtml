@@ -1,0 +1,15 @@
+﻿@using TerranForum.Domain.Models
+@using Microsoft.AspNetCore.Identity
+@model PostReply
+
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="container" id="manageReply" replyId="@Model.Id" postId="@Model.PostId">
+    <span class="text-justify">
+        @Model.Content
+            @if (UserManager.GetUserId(User) == Model.UserId)
+            {
+                <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
+            }
+    </span>
+</div>

@@ -65,7 +65,7 @@ namespace TerranForum.Infrastructure.Services
                 TestForumPostData replyPostData = _TestForumPosts[i * 3 + 2];
                 ApplicationUser user = await _UserManager.FindByNameAsync(TestUser);
 
-                Forum? forum = await _ForumRepository.GetByIdWithAllAsync(testForumData.Id, true);
+                Forum? forum = await _ForumRepository.GetByIdWithDeletedAsync(testForumData.Id);
 
                 if (forum == null)
                 {
@@ -94,7 +94,8 @@ namespace TerranForum.Infrastructure.Services
                 else 
                 {
                     await _ForumRepository.UndoDeleteAsync(forum);
-                    await _PostRepository.UndoDeleteAsync(forum.Posts.First(x => x.IsMaster));
+                    Post? masterPost = await _PostRepository.GetFirstWithAsync(x => x.ForumId == forum.Id && x.IsMaster);
+                    await _PostRepository.UndoDeleteAsync(masterPost);
                 }
 
                 Post? post = await _PostRepository.GetByIdWithDeletedAsync(answerPostData.Id);
