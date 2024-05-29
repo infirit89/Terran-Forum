@@ -121,6 +121,48 @@ namespace TerranForum.Controllers
             }
         }
 
+        [HttpGet, Authorize]
+        public async Task<IActionResult> Edit(int forumId)
+        {
+            try
+            {
+                ForumDataModel forumData = await _ForumService.GetForumData(forumId, _UserManager.GetUserId(User));
+                return View(new UpdateForumViewModel 
+                {
+                    Title = forumData.Title,
+                    Content = forumData.Content,
+                    ForumId = forumId
+                });
+            }
+            catch (ModelNotFoundException)
+            {
+                _Logger.LogError("Couldn't find the forum/master post");
+                return StatusCode(404);
+            }
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> Edit(UpdateForumViewModel updateForumViewModel) 
+        {
+            try
+            {
+                await _ForumService.UpdateForumThread(new UpdateForumModel
+                {
+                    ForumId = updateForumViewModel.ForumId,
+                    UserId = _UserManager.GetUserId(User),
+                    Title = updateForumViewModel.Title,
+                    Content = updateForumViewModel.Content
+                });
+
+                return RedirectToAction("ViewThread", "Forum", new { updateForumViewModel.ForumId });
+            }
+            catch (TerranForumException)
+            {
+                _Logger.LogError("Couldn't update the forum");
+                return StatusCode(500);
+            }
+        }
+
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IForumService _ForumService;
         private readonly IForumRepository _ForumRepository;

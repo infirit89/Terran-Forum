@@ -1,4 +1,4 @@
 ﻿namespace TerranForum.Domain.Exceptions
 {
-    public class UserNotFoundException : TerranForumException { }
+    public class UserNotFoundException : ModelNotFoundException { }
 }

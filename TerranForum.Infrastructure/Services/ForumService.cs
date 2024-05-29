@@ -91,6 +91,49 @@ namespace TerranForum.Infrastructure.Services
                 throw new DeleteModelException();
         }
 
+        public async Task UpdateForumThread(UpdateForumModel updateForumModel)
+        {
+            if (!await _UserRepository.ExsistsAsync(x => x.Id == updateForumModel.UserId))
+                throw new UserNotFoundException();
+
+            Post masterPost = await _PostRepository
+                .GetFirstWithAsync(x =>
+                    x.ForumId == updateForumModel.ForumId
+                    && x.IsMaster
+                    && x.UserId == updateForumModel.UserId)
+                ?? throw new PostNotFoundException();
+
+            Forum forum = await _ForumRepository.GetByIdAsync(updateForumModel.ForumId) 
+                ?? throw new ForumNotFoundException();
+
+            masterPost.Content = updateForumModel.Content;
+            if (!await _PostRepository.UpdateAsync(masterPost))
+                throw new UpdateModelException();
+
+            forum.Title = updateForumModel.Title;
+            if (!await _ForumRepository.UpdateAsync(forum))
+                throw new UpdateModelException();
+        }
+
+        public async Task<ForumDataModel> GetForumData(int forumId, string userId)
+        {
+            Post masterPost = await _PostRepository
+                .GetFirstWithAsync(x => 
+                    x.ForumId == forumId
+                    && x.IsMaster
+                    && x.UserId == userId)
+                ?? throw new PostNotFoundException();
+
+            Forum forum = await _ForumRepository.GetByIdAsync(forumId)
+                ?? throw new ForumNotFoundException();
+
+            return new ForumDataModel
+            {
+                Title = forum.Title,
+                Content = masterPost.Content
+            };
+        }
+
         private IForumRepository _ForumRepository;
         private IPostRepository _PostRepository;
         private IUserRepository _UserRepository;

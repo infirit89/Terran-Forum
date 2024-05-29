@@ -14,7 +14,14 @@
 @if (UserManager.GetUserId(User) == Model.UserId)
 {
     <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
-        <a asp-controller="Post" asp-action="Edit" asp-route-postId="@Model.Id" class="secondary-anchor">Edit</a>
+        @if (!Model.IsMaster)
+        {    
+            <a asp-controller="Post" asp-action="Edit" asp-route-postId="@Model.Id" class="secondary-anchor">Edit</a>
+        }
+        else
+        {
+            <a asp-controller="Forum" asp-action="Edit" asp-route-forumId="@Model.ForumId" class="secondary-anchor">Edit</a>
+        }
         <a asp-controller="Post" asp-action="GetPostDeleteView" class="danger-anchor" id="deleteBtn">Delete</a>
     </div>
 }

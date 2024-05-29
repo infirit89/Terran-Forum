@@ -8,5 +8,7 @@ namespace TerranForum.Application.Services
         Task<Forum> CreateForumThreadAsync(CreateForumModel createForumModel);
         Task<Post> GetForumMasterPost(int forumId);
         Task DeleteForumThread(int forumId, string userId);
+        Task UpdateForumThread(UpdateForumModel updateForumModel);
+        Task<ForumDataModel> GetForumData(int forumId, string userId);
     }
 }

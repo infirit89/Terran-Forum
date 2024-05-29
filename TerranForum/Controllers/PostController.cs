@@ -114,7 +114,7 @@ namespace TerranForum.Controllers
                 });
                 return Json(new { Rating = newRating });
             }
-            catch (TerranForumException ex) 
+            catch (TerranForumException ex)
             {
                 _Logger.LogError(ex.Message);
                 return StatusCode(500);
@@ -173,6 +173,10 @@ namespace TerranForum.Controllers
 
             if (post is null)
                 return StatusCode(404);
+
+            // you can't edit master post with this controller
+            if (post.IsMaster)
+                return StatusCode(403);
 
             return View(new EditPostViewModel
             {
