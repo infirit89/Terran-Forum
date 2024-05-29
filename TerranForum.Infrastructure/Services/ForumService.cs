@@ -12,12 +12,12 @@ namespace TerranForum.Infrastructure.Services
             IForumRepository forumRepository,
             IPostRepository postRepository,
             IUserRepository userRepository,
-            IPostReplyRepository postReplyRepository)
+            IUserService userService)
         {
             _ForumRepository = forumRepository;
             _PostRepository = postRepository;
             _UserRepository = userRepository;
-            _PostReplyRepository = postReplyRepository;
+            _UserService = userService;
         }
 
         public async Task<Forum> CreateForumThreadAsync(CreateForumModel createForumModel)
@@ -63,8 +63,17 @@ namespace TerranForum.Infrastructure.Services
             if (!await _UserRepository.ExsistsAsync(x => x.Id == userId))
                 throw new UserNotFoundException();
 
-            if (!await _PostRepository.ExistsAsync(x => x.ForumId == forumId && x.IsMaster && x.UserId == userId))
-                throw new PostNotFoundException();
+
+            if (!await _UserService.IsUserAdmin(userId))
+            {
+                if (!await _PostRepository.ExistsAsync(x => x.ForumId == forumId && x.IsMaster && x.UserId == userId))
+                    throw new PostNotFoundException();
+            }
+            else
+            {
+                if (!await _PostRepository.ExistsAsync(x => x.ForumId == forumId && x.IsMaster))
+                    throw new PostNotFoundException();
+            }
 
             Forum forum = await _ForumRepository
                 .GetFirstWithAsync(
@@ -137,6 +146,6 @@ namespace TerranForum.Infrastructure.Services
         private IForumRepository _ForumRepository;
         private IPostRepository _PostRepository;
         private IUserRepository _UserRepository;
-        private IPostReplyRepository _PostReplyRepository;
+        private IUserService _UserService;
     }
 }

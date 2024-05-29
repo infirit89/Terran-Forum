@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using TerranForum.Application.Services
 @using System.ComponentModel.DataAnnotations
+@using TerranForum.Domain.Enums
 @model Post
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -11,16 +12,19 @@
 {
     <p>@paragraph</p>
 }
-@if (UserManager.GetUserId(User) == Model.UserId)
+@if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
 {
     <div class="container mb-2" id="managePost" postId="@Model.Id" forumId="@Model.ForumId">
-        @if (!Model.IsMaster)
-        {    
-            <a asp-controller="Post" asp-action="Edit" asp-route-postId="@Model.Id" class="secondary-anchor">Edit</a>
-        }
-        else
+        @if (!User.IsInRole(Roles.Admin))
         {
-            <a asp-controller="Forum" asp-action="Edit" asp-route-forumId="@Model.ForumId" class="secondary-anchor">Edit</a>
+            @if (!Model.IsMaster)
+            {    
+                <a asp-controller="Post" asp-action="Edit" asp-route-postId="@Model.Id" class="secondary-anchor">Edit</a>
+            }
+            else
+            {
+                <a asp-controller="Forum" asp-action="Edit" asp-route-forumId="@Model.ForumId" class="secondary-anchor">Edit</a>
+            }
         }
         <a asp-controller="Post" asp-action="GetPostDeleteView" class="danger-anchor" id="deleteBtn">Delete</a>
     </div>

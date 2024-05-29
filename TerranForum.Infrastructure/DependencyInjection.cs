@@ -31,6 +31,7 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRatingRepository<Post>, PostRatingRepository>();
 
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPostReplyService, PostReplyService>();

@@ -12,6 +12,11 @@
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
     <button type="submit" class="button primary-button">Save Edits</button>
+    <a asp-controller="Forum"
+       asp-action="ViewThread"
+       asp-route-forumId="@Model.ForumId"
+       class="button link-button" id="dimissBtn">Cancel</a>
+
     <input asp-for="ForumId" type="hidden" />
 </form>
 

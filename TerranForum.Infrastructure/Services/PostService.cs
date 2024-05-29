@@ -3,6 +3,7 @@ using TerranForum.Application.Services;
 using TerranForum.Domain.Models;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Application.Dtos.PostDtos;
+using System.Linq.Expressions;
 
 namespace TerranForum.Infrastructure.Services
 {
@@ -12,12 +13,14 @@ namespace TerranForum.Infrastructure.Services
             IPostRepository postRepository,
             IForumRepository forumRepository,
             IUserRepository userRepository,
-            IRatingRepository<Post> postRatingRepository)
+            IRatingRepository<Post> postRatingRepository,
+            IUserService userService)
         {
             _PostRepository = postRepository;
             _ForumRepository = forumRepository;
             _UserRepository = userRepository;
             _PostRatingRepository = postRatingRepository;
+            _UserService = userService;
         }
 
         public async Task<Post> AddPostToThread(CreatePostModel createPostModel)
@@ -102,12 +105,20 @@ namespace TerranForum.Infrastructure.Services
             if (!await _UserRepository.ExsistsAsync(x => x.Id == deletePostModel.UserId))
                 throw new UserNotFoundException();
 
-            Post post = await _PostRepository
-                .GetFirstWithAsync(
-                    x => x.Id == deletePostModel.PostId
-                    && x.ForumId == deletePostModel.ForumId
-                    && x.UserId == deletePostModel.UserId)
-                ?? throw new PostNotFoundException();
+            Expression<Func<Post, bool>> predicate;
+
+            if (await _UserService.IsUserAdmin(deletePostModel.UserId))
+                predicate = (x) =>
+                    x.Id == deletePostModel.PostId
+                        && x.ForumId == deletePostModel.ForumId;
+            else
+                predicate = x => x.Id == deletePostModel.PostId
+                        && x.ForumId == deletePostModel.ForumId
+                        && x.UserId == deletePostModel.UserId;
+
+            Post post = post = await _PostRepository
+                    .GetFirstWithAsync(predicate)
+                    ?? throw new PostNotFoundException();
 
             if (!await _PostRepository.DeleteAsync(post))
                 throw new DeleteModelException();
@@ -141,5 +152,6 @@ namespace TerranForum.Infrastructure.Services
         private readonly IForumRepository _ForumRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IRatingRepository<Post> _PostRatingRepository;
+        private readonly IUserService _UserService;
     }
 }
