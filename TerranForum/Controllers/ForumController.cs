@@ -7,6 +7,8 @@ using TerranForum.Application.Services;
 using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
 using TerranForum.ViewModels.Forum;
+using TerranForum.ViewModels.Post;
+using TerranForum.ViewModels.PostReply;
 
 namespace TerranForum.Controllers
 {
@@ -65,7 +67,23 @@ namespace TerranForum.Controllers
             {
                 Id = forumId,
                 Title = forum.Title,
-                Posts = forum.Posts
+                Posts = forum.Posts.Select(p => new PostViewModel
+                {
+                    Id = p.Id,
+                    UserId = p.UserId,
+                    ForumId = p.ForumId,
+                    CreatorUserName = p.User.UserName,
+                    Rating = p.Ratings.Sum(x => x.Value),
+                    Content = p.Content,
+                    IsMaster = p.IsMaster,
+                    Replies = p.Replies.Select(pr => new PostReplyViewModel
+                    {
+                        Id = pr.Id,
+                        PostId = pr.PostId,
+                        Content = pr.Content,
+                        UserId = pr.UserId
+                    })
+                })
             };
 
             return View(forumThreadViewModel);

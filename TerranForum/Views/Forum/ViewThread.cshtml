@@ -8,8 +8,8 @@
 @inject SignInManager<ApplicationUser> SignInManager;
 
 @{
-    Post masterPost = Model.Posts.First();
-    IEnumerable<Post> answers = Model.Posts.Skip(1);
+    PostViewModel masterPost = Model.Posts.First();
+    IEnumerable<PostViewModel> answers = Model.Posts.Skip(1);
 }
 
 <link href="~/css/page-viewthread.css" rel="stylesheet"/>

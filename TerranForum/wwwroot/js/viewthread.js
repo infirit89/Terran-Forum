@@ -38,6 +38,9 @@
 		console.log(replyId);
 
 		const deleteButton = manageContainer.querySelector('a');
+		if (deleteButton == null)
+			continue;
+
 		deleteButton.addEventListener('click', (e) => {
 			e.preventDefault();
 
