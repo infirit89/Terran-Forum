@@ -5,11 +5,13 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerranForum", "TerranForum\TerranForum.csproj", "{3DF12D39-9B9C-4E77-AE23-D9BC54717C51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerranForum.Domain", "TerranForum.Domain\TerranForum.Domain.csproj", "{616AC9D9-F2D9-4DB5-B0EE-CD071DC1167C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerranForum.Domain", "TerranForum.Domain\TerranForum.Domain.csproj", "{616AC9D9-F2D9-4DB5-B0EE-CD071DC1167C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerranForum.Application", "TerranForum.Application\TerranForum.Application.csproj", "{E3B6767E-998F-4376-AE31-F10723A95ABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerranForum.Application", "TerranForum.Application\TerranForum.Application.csproj", "{E3B6767E-998F-4376-AE31-F10723A95ABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerranForum.Infrastructure", "TerranForum.Infrastructure\TerranForum.Infrastructure.csproj", "{272ECAF6-6702-4D5E-BDC7-B1F1E4BB028C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerranForum.Infrastructure", "TerranForum.Infrastructure\TerranForum.Infrastructure.csproj", "{272ECAF6-6702-4D5E-BDC7-B1F1E4BB028C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerranForum.Tests", "TerranForum.Tests\TerranForum.Tests.csproj", "{F9D14436-E317-4363-AF82-1AE088952AFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{272ECAF6-6702-4D5E-BDC7-B1F1E4BB028C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{272ECAF6-6702-4D5E-BDC7-B1F1E4BB028C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{272ECAF6-6702-4D5E-BDC7-B1F1E4BB028C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9D14436-E317-4363-AF82-1AE088952AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D14436-E317-4363-AF82-1AE088952AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D14436-E317-4363-AF82-1AE088952AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D14436-E317-4363-AF82-1AE088952AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

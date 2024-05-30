@@ -9,15 +9,15 @@ namespace TerranForum.Infrastructure
 {
     public class TerranForumDbContext : IdentityDbContext<ApplicationUser>
     {
-        public TerranForumDbContext(IServiceProvider serviceProvider)
+        public TerranForumDbContext(SoftDeleteInterceptor deleteInterceptor)
         {
-            _Services = serviceProvider;
+            _DeleteInterceptor = deleteInterceptor;
         }
 
-        public TerranForumDbContext(DbContextOptions<TerranForumDbContext> options, IServiceProvider serviceProvider)
+        public TerranForumDbContext(DbContextOptions<TerranForumDbContext> options, SoftDeleteInterceptor deleteInterceptor)
             : base(options)
         {
-            _Services = serviceProvider;
+            _DeleteInterceptor = deleteInterceptor;
         }
 
         public override DbSet<ApplicationUser> Users { get; set; } = null!;
@@ -29,8 +29,7 @@ namespace TerranForum.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.AddInterceptors(_Services.GetRequiredService<SoftDeleteInterceptor>());
-            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.AddInterceptors(_DeleteInterceptor);
         }
 
         protected override void OnModelCreating(ModelBuilder builder) 
@@ -54,6 +53,6 @@ namespace TerranForum.Infrastructure
             }
         }
 
-        private readonly IServiceProvider _Services;
+        private readonly SoftDeleteInterceptor _DeleteInterceptor;
     }
 }

@@ -3,6 +3,9 @@ using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Models;
 using TerranForum.Domain.Exceptions;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TerranForum.Tests")]
 
 namespace TerranForum.Infrastructure.Services
 {
