@@ -1,14 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TerranForum.Application.Repositories;
-using TerranForum.Domain.Models;
-using TerranForum.Infrastructure;
+﻿using TerranForum.Application.Repositories;
 using TerranForum.Infrastructure.Repositories;
-using TerranForum.Infrastructure.Services;
 
 namespace TerranForum.Tests.Repositories
 {
@@ -22,13 +13,13 @@ namespace TerranForum.Tests.Repositories
         }
 
         [Test]
-        public async Task UserRepository_ExistsById_ReturnsTrue()
+        public async Task ExistsById_ReturnsTrue()
         {
             Assert.That(await _UserRepository.ExsistsAsync(x => x.Id == "3800c45c-ae61-4a82-be70-7fb1e8af6aef"), Is.True);
         }
 
         [Test]
-        public async Task UserRepository_ExistsById_ReturnsFalse()
+        public async Task ExistsById_ReturnsFalse()
         {
             Assert.That(await _UserRepository.ExsistsAsync(x => x.Id == "592bdc52-4745-41be-9214-b3031f28cfcf"), Is.False);
         }

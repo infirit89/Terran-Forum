@@ -19,10 +19,13 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public Task<bool> DeleteAsync(Post post)
+        public async Task<bool> DeleteAsync(Post? post)
         {
+            if (post is null)
+                return false;
+
             _DbContext.Posts.Remove(post);
-            return _DbContext.TrySaveAsync();
+            return await _DbContext.TrySaveAsync();
         }
 
         public Task<bool> ExistsAsync(Expression<Func<Post, bool>> predicate, bool withDeleted = false)

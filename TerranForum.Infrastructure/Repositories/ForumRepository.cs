@@ -20,8 +20,11 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> DeleteAsync(Forum forum)
+        public async Task<bool> DeleteAsync(Forum? forum)
         {
+            if (forum is null)
+                return false;
+
             _DbContext.Forums.Remove(forum);
             return await _DbContext.TrySaveAsync();
         }

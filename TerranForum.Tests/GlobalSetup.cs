@@ -26,7 +26,18 @@ namespace TerranForum.Tests
 
             DbContext = new TerranForumDbContext(options, new SoftDeleteInterceptor());
 
-            DbContext.Add(user);
+            await DbContext.AddAsync(user);
+
+            List<Forum> forums = new List<Forum>()
+            {
+                new Forum() { Title = "Forum0" },
+                new Forum() { Title = "Forum1" },
+                new Forum() { Title = "Forum2" },
+                new Forum() { Title = "Forum3" },
+            };
+
+            await DbContext.AddRangeAsync(forums);
+
             await DbContext.SaveChangesAsync();
         }
 

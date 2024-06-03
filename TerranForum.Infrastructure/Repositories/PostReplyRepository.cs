@@ -19,8 +19,11 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<bool> DeleteAsync(PostReply postReply)
+        public async Task<bool> DeleteAsync(PostReply? postReply)
         {
+            if (postReply is null)
+                return false;
+
             _DbContext.PostReplies.Remove(postReply);
             return await _DbContext.TrySaveAsync();
         }

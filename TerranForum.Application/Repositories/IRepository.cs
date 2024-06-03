@@ -12,7 +12,7 @@ namespace TerranForum.Application.Repositories
         Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>>? predicate = null, bool withDeleted = false);
         Task<IEnumerable<TModel>> GetAllWithDeletedAsync(Expression<Func<TModel, bool>>? predicate = null);
         Task<IEnumerable<TModel>> GetAllOrderedAsync(Expression<Func<TModel, bool>>? predicate = null, Ordering<TModel>? ordering = null);
-        Task<bool> DeleteAsync(TModel value);
+        Task<bool> DeleteAsync(TModel? value);
         Task<bool> UpdateAsync(TModel value);
         Task<bool> ExistsAsync(Expression<Func<TModel, bool>> predicate, bool withDeleted = false);
         Task<bool> ExistsWithDeletedAsync(Expression<Func<TModel, bool>> predicate);
