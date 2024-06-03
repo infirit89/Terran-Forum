@@ -63,8 +63,11 @@ namespace TerranForum.Infrastructure.Repositories
             return forums.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(Forum forum)
+        public async Task<bool> UpdateAsync(Forum? forum)
         {
+            if (forum is null)
+                return false;
+
             _DbContext.Update(forum);
             return await _DbContext.TrySaveAsync();
         }

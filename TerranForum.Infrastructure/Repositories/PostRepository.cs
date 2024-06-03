@@ -77,10 +77,13 @@ namespace TerranForum.Infrastructure.Repositories
             return posts.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<bool> UpdateAsync(Post post)
+        public async Task<bool> UpdateAsync(Post? post)
         {
+            if (post is null)
+                return false;
+
             _DbContext.Update(post);
-            return _DbContext.TrySaveAsync();
+            return await _DbContext.TrySaveAsync();
         }
 
         public Task<Post?> GetFirstWithAsync(Expression<Func<Post, bool>> predicate, params Expression<Func<Post, object>>[] includes)

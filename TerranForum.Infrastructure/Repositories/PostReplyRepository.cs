@@ -74,8 +74,11 @@ namespace TerranForum.Infrastructure.Repositories
             return await postReplies.FirstOrDefaultAsync(x => x.Id == id);
         }
         
-        public async Task<bool> UpdateAsync(PostReply postReply)
+        public async Task<bool> UpdateAsync(PostReply? postReply)
         {
+            if (postReply is null)
+                return false;
+
             _DbContext.Update(postReply);
             return await _DbContext.TrySaveAsync();
         }

@@ -94,6 +94,20 @@ namespace TerranForum.Tests.Repositories
                 Is.False);
         }
 
+        [Test]
+        public async Task UpdateAsync_ReturnsTrue() 
+        {
+            Forum forum = await GlobalSetup
+                .DbContext
+                .Forums
+                .FirstAsync(x => x.Title == "Forum0");
+
+            forum.Title = "Forum10";
+            Assert.That(
+                await _ForumRepository.UpdateAsync(forum),
+                Is.True);
+        }
+
         private IForumRepository _ForumRepository;
     }
 }

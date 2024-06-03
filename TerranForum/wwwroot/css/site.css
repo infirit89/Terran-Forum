@@ -11,7 +11,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem var(--background-color), 0 0 0 0.25rem #258cfb;
 }
 
 html {
@@ -191,4 +191,22 @@ textarea {
 .flex-center {
     justify-content: center !important;
     align-items: center !important;
+}
+
+.form-control {
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-color: gray;
+}
+
+.form-control:focus {
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-color: gray;
+}
+
+.large-button {
+    padding: .5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: .3rem;
 }
