@@ -76,6 +76,9 @@ namespace TerranForum.Controllers
                     Rating = p.Ratings.Sum(x => x.Value),
                     Content = p.Content,
                     IsMaster = p.IsMaster,
+                    CurrentUserRating = (p.Ratings
+                    .FirstOrDefault(x => x.UserId == _UserManager.GetUserId(User)) 
+                    ?? new Rating<Post>()).Value,
                     Replies = p.Replies.Select(pr => new PostReplyViewModel
                     {
                         Id = pr.Id,

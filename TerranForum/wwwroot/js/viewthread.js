@@ -33,10 +33,8 @@
 	const replyManageContainers = document.querySelectorAll('#manageReply');
 	for (const manageContainer of replyManageContainers) {
 		const postId = manageContainer.getAttribute('postId');
-		console.log(postId);
 		const replyId = manageContainer.getAttribute('replyId');
-		console.log(replyId);
-
+		
 		const deleteButton = manageContainer.querySelector('a');
 		if (deleteButton == null)
 			continue;
@@ -85,10 +83,26 @@
 			.catch(error => console.error(error));
 		}
 
+		if (likeButton === null || dislikeButton === null)
+			continue;
+
 		likeButton.addEventListener('click', (e) => {
 			e.preventDefault();
 			const ratingModifier = 1;
 			const ratingContainer = ratingModifyContainer.querySelector('div');
+
+			upvoteIconStyle = likeButton.children[0].style;
+			downvoteIconStyle = dislikeButton.children[0].style;
+
+			if (upvoteIconStyle.fontVariationSettings == ''
+				|| upvoteIconStyle.fontVariationSettings == '"FILL" 0'
+				|| downvoteIconStyle.fontVariationSettings == '"FILL" 1') {
+				upvoteIconStyle.fontVariationSettings = '"FILL" 1';
+				downvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			}
+			else if (upvoteIconStyle.fontVariationSettings == '"FILL" 1') {
+				upvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			}
 			
 			updateRating(likeButton.href, ratingModifier, ratingContainer);
 		});
@@ -97,7 +111,20 @@
 			e.preventDefault();
 			const ratingModifier = -1;
 			const ratingContainer = ratingModifyContainer.querySelector('div');
-			
+
+			upvoteIconStyle = likeButton.children[0].style;
+			downvoteIconStyle = dislikeButton.children[0].style;
+
+			if (downvoteIconStyle.fontVariationSettings == ''
+				|| downvoteIconStyle.fontVariationSettings == '"FILL" 0'
+				|| upvoteIconStyle.fontVariationSettings == '"FILL" 1') {
+				downvoteIconStyle.fontVariationSettings = '"FILL" 1';
+				upvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			}
+			else if (downvoteIconStyle.fontVariationSettings == '"FILL" 1') {
+				downvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			}
+
 			updateRating(dislikeButton.href, ratingModifier, ratingContainer);
 		});
 	}

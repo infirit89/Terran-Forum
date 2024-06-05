@@ -58,7 +58,8 @@ namespace TerranForum.Infrastructure.Services
             Post post = 
                 await _PostRepository
                 .GetFirstWithAsync(
-                    x => x.Id == updatePostRatingModel.PostId) 
+                    x => x.Id == updatePostRatingModel.PostId,
+                    x => x.Ratings) 
                 ?? throw new PostNotFoundException();
 
             if (postRating != null)

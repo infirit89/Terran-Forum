@@ -9,6 +9,20 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    string getUpvoteFill()
+    {
+        return Model.CurrentUserRating > 0 ?
+            "\"FILL\" 1" : "\"FILL\" 0";
+    }
+
+    string getDownvoteFill()
+    {
+        return Model.CurrentUserRating < 0 ?
+            "\"FILL\" 1" : "\"FILL\" 0";
+    }
+}
+
 @foreach (var paragraph in Model.Content.Split("\r\n\r\n"))
 {
     <p>@paragraph</p>
@@ -37,25 +51,45 @@
     <div class="d-flex justify-content-start" postId="@Model.Id" id="ratingModifyContainer">
         @if (SignInManager.IsSignedIn(User))
         {
+
             <a class="px-2"  
-                id="like"
-                asp-controller="Post"
-                asp-action="UpdateRating">Like</a>    
+            id="like"
+            asp-controller="Post"
+            asp-action="UpdateRating">
+                <span class="material-symbols-outlined"
+                      style="font-variation-settings: @getUpvoteFill();">
+                    shift
+                </span>
+            </a>
             <div class="px-1">@Model.Rating</div>
             <a class="px-2"
                 id="dislike"
                 asp-controller="Post"
-                asp-action="UpdateRating">Dislike</a>
+                asp-action="UpdateRating">
+                <span class="material-symbols-outlined"
+                    style="transform: rotate(180deg);
+                    font-variation-settings: @getDownvoteFill();">
+                    shift
+                </span>
+            </a>
         }
         else
         {
             <a class="px-2"
                asp-area="Identity"
-               asp-page="/Account/Login">Like</a>
+               asp-page="/Account/Login">
+                <span class="material-symbols-outlined">
+                    shift
+                </span>
+           </a>
             <div class="px-1">@Model.Rating</div>
             <a class="px-2"
                asp-area="Identity" 
-               asp-page="/Account/Login">Dislike</a>
+               asp-page="/Account/Login">
+                <span class="material-symbols-outlined" style="transform: rotate(180deg);">
+                    shift
+                </span>
+           </a>
         }
     </div>
 </div>
