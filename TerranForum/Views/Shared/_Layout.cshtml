@@ -13,7 +13,6 @@
 <body>
     <header>
         <div class="container">
-
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-0 navbar-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" asp-controller="Forum" asp-action="All">Terran</a>
@@ -40,7 +39,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/generateicon.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

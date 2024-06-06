@@ -226,3 +226,11 @@ textarea {
     padding-bottom: 0.4rem;
     padding-top: 0.4rem;
 }
+
+minidenticon-svg {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #EEE;
+    display: inline-block;
+}
