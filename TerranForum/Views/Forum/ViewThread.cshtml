@@ -14,12 +14,11 @@
 
 <link href="~/css/page-viewthread.css" rel="stylesheet"/>
 
-<div class="container">
+<div class="container w-75">
     <h3>@Model.Title</h3>
-    <hr />
-
-    <div class="container pb-4">
-        <div class="container">
+    
+    <div class="container pb-4 ps-0">
+        <div class="container ps-0">
             @{
                 await Html.RenderPartialAsync(
                     "~/Views/Post/_ViewPartial.cshtml",
@@ -27,11 +26,11 @@
             }
         </div>
 
-        <div class="mt-3">
+        <div class="mt-4">
             <h5>Replies: @answers.Count()</h5>
             @foreach (var post in answers)
             {
-                <div class="container pt-4 mb-4">
+                <div class="container pt-4 mb-4 ps-0">
                     @{
                         await Html.RenderPartialAsync(
                             "~/Views/Post/_ViewPartial.cshtml",
@@ -44,7 +43,7 @@
 
         @if (SignInManager.IsSignedIn(User))
         {
-            <div class="container">
+            <div class="container mt-3">
                 <h4>Your answer</h4>
             
                 @{

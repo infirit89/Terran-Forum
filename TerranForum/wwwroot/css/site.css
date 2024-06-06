@@ -210,3 +210,19 @@ textarea {
     font-size: 1.25rem;
     border-radius: .3rem;
 }
+
+.secondary-border {
+    border-color: var(--text-700) !important;
+}
+
+.button-shell {
+    box-sizing: border-box;
+    border-radius: 999px;
+    background-color: var(--text-950);
+    text-overflow: ellipsis;
+    outline-offset: 0px;
+    border: hidden;
+    border-color: var(--text-950);
+    padding-bottom: 0.4rem;
+    padding-top: 0.4rem;
+}

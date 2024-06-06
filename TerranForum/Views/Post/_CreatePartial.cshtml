@@ -1,12 +1,12 @@
 ﻿@using TerranForum.ViewModels.Post
 @model CreatePostViewModel
 
-<form asp-controller="Post" asp-action="CreatePost">
+<form class="mt-3" asp-controller="Post" asp-action="CreatePost">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-floating pb-1">
-        <textarea rows="8" asp-for="Content" type="text"></textarea> <br />
+    <div class="pb-1">
+        <textarea class="form-control" rows="8" asp-for="Content" type="text"></textarea> <br />
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
-    <input type="submit" value="Post Answer" />
+    <button id="postSubmit" type="submit" class="button primary-button">Post Answer</button>
     <input asp-for="ForumId" name="forumId" type="hidden" />
 </form>

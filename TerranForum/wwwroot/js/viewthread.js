@@ -94,14 +94,16 @@
 			upvoteIconStyle = likeButton.children[0].style;
 			downvoteIconStyle = dislikeButton.children[0].style;
 
-			if (upvoteIconStyle.fontVariationSettings == ''
-				|| upvoteIconStyle.fontVariationSettings == '"FILL" 0'
-				|| downvoteIconStyle.fontVariationSettings == '"FILL" 1') {
-				upvoteIconStyle.fontVariationSettings = '"FILL" 1';
-				downvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			upvoteFontVariationSettingsStr = new String(upvoteIconStyle.fontVariationSettings);
+			downvoteFontVariationSettingsStr = new String(downvoteIconStyle.fontVariationSettings);
+			
+			if (upvoteFontVariationSettingsStr.includes('"FILL" 0')
+				|| downvoteFontVariationSettingsStr.includes('"FILL" 1')) {
+				upvoteIconStyle.fontVariationSettings = upvoteFontVariationSettingsStr.replace('"FILL" 0', '"FILL" 1');
+				downvoteIconStyle.fontVariationSettings = downvoteFontVariationSettingsStr.replace('"FILL" 1', '"FILL" 0');
 			}
-			else if (upvoteIconStyle.fontVariationSettings == '"FILL" 1') {
-				upvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			else if (upvoteFontVariationSettingsStr.includes('"FILL" 1')) {
+				upvoteIconStyle.fontVariationSettings = upvoteFontVariationSettingsStr.replace('"FILL" 1', '"FILL" 0');
 			}
 			
 			updateRating(likeButton.href, ratingModifier, ratingContainer);
@@ -115,14 +117,16 @@
 			upvoteIconStyle = likeButton.children[0].style;
 			downvoteIconStyle = dislikeButton.children[0].style;
 
-			if (downvoteIconStyle.fontVariationSettings == ''
-				|| downvoteIconStyle.fontVariationSettings == '"FILL" 0'
-				|| upvoteIconStyle.fontVariationSettings == '"FILL" 1') {
-				downvoteIconStyle.fontVariationSettings = '"FILL" 1';
-				upvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			upvoteFontVariationSettingsStr = new String(upvoteIconStyle.fontVariationSettings);
+			downvoteFontVariationSettingsStr = new String(downvoteIconStyle.fontVariationSettings);
+
+			if (downvoteFontVariationSettingsStr.includes('"FILL" 0')
+				|| upvoteFontVariationSettingsStr.includes('"FILL" 1')) {
+				downvoteIconStyle.fontVariationSettings = downvoteFontVariationSettingsStr.replace('"FILL" 0', '"FILL" 1');
+				upvoteIconStyle.fontVariationSettings = upvoteFontVariationSettingsStr.replace('"FILL" 1', '"FILL" 0');
 			}
-			else if (downvoteIconStyle.fontVariationSettings == '"FILL" 1') {
-				downvoteIconStyle.fontVariationSettings = '"FILL" 0';
+			else if (downvoteFontVariationSettingsStr.includes('"FILL" 1')) {
+				downvoteIconStyle.fontVariationSettings = downvoteFontVariationSettingsStr.replace('"FILL" 1', '"FILL" 0');
 			}
 
 			updateRating(dislikeButton.href, ratingModifier, ratingContainer);

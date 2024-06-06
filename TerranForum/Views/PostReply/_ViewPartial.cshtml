@@ -6,13 +6,12 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="container mb-1" id="manageReply" replyId="@Model.Id" postId="@Model.PostId">
+<div class="container mb-1 pb-1 border-bottom secondary-border" id="manageReply" replyId="@Model.Id" postId="@Model.PostId">
     <span class="text-justify">
         @Model.Content
-            @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
-            {
-                <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
-            }
+        @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
+        {
+            <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
+        }
     </span>
-    <hr class="my-2"/>
 </div>
