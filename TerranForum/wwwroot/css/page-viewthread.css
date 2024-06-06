@@ -2,8 +2,10 @@
 
 .replyAchor {
 	text-decoration: none;
-	padding: .5rem 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
 	color: var(--text-color);
+	font-size: 0.8rem;
 }
 
 .replyAchor:hover {

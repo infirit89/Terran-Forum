@@ -31,14 +31,14 @@
             <h5>Replies: @answers.Count()</h5>
             @foreach (var post in answers)
             {
-                <div class="container pt-4">
+                <div class="container pt-4 mb-4">
                     @{
                         await Html.RenderPartialAsync(
                             "~/Views/Post/_ViewPartial.cshtml",
                             post);
                     }
                 </div>
-                <hr class="mt-1"/>
+                <hr class="mt-1 mb-0"/>
             }
         </div>
 
