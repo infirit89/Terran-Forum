@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TerranForum.Infrastructure;
 
@@ -11,9 +12,10 @@ using TerranForum.Infrastructure;
 namespace TerranForum.Infrastructure.Migrations
 {
     [DbContext(typeof(TerranForumDbContext))]
-    partial class TerranForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240607111207_added-user-profile-images")]
+    partial class addeduserprofileimages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

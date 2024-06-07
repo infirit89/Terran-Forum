@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Jdenticon;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography;
+using System.Text;
 using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Dtos.PostDtos;
 using TerranForum.Application.Dtos.PostReplyDtos;
@@ -20,8 +24,8 @@ namespace TerranForum.Infrastructure.Services
             IForumRepository forumRepository,
             IForumService forumService,
             IPostService postService,
-            IPostReplyRepository postReplyRepository,
-            IPostReplyService postReplyService)
+            IPostReplyService postReplyService,
+            IHostEnvironment environment)
         {
             _Logger = logger;
             _RoleManager = roleManager;
@@ -32,6 +36,7 @@ namespace TerranForum.Infrastructure.Services
             _ForumService = forumService;
             _PostService = postService;
             _PostReplyService = postReplyService;
+            _Environment = environment;
         }
 
         public async Task SeedRolesAsync()
@@ -122,6 +127,11 @@ namespace TerranForum.Infrastructure.Services
         {
             _Logger.LogInformation("\tCreating user: {0} with role: {1}", userName, role);
             ApplicationUser user = new ApplicationUser();
+            using (var hash = SHA256.Create())
+            {
+                string contentPath = Path.Join(_Environment.ContentRootPath, "wwwroot");
+                await Identicon.FromHash(user.Id, 100).SaveAsSvgAsync(Path.Join(contentPath, $"{Guid.NewGuid().ToString()}.svg"));
+            }
             await _UserStore.SetUserNameAsync(user, userName, default);
             await ((IUserEmailStore<ApplicationUser>)_UserStore).SetEmailAsync(user, userName, default);
             await ((IUserEmailStore<ApplicationUser>)_UserStore).SetEmailConfirmedAsync(user, true, default);
@@ -134,6 +144,10 @@ namespace TerranForum.Infrastructure.Services
             return true;
         }
 
+        public async Task SeedUserIconsAsync() 
+        {
+        }
+
         private readonly ILogger<SeederService> _Logger;
         private readonly IForumService _ForumService;
         private readonly IPostService _PostService;
@@ -144,6 +158,7 @@ namespace TerranForum.Infrastructure.Services
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
         private readonly IUserRepository _UserRepository;
+        private readonly IHostEnvironment _Environment;
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";

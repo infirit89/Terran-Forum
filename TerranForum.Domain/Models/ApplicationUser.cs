@@ -16,5 +16,7 @@ namespace TerranForum.Domain.Models
         public virtual IEnumerable<Rating<PostReply>> PostReplyRatings { get; set; } = new List<Rating<PostReply>>();
         public bool IsDeleted { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
+
+        public string ProfileImageUrl { get; set; } = null!;
     }
 }
