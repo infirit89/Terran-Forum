@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@model ApplicationUser
+@using Microsoft.AspNetCore.Identity
 @using TerranForum.Domain.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -7,15 +8,28 @@
 <ul class="navbar-nav ms-auto">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li id="manage-li" class="nav-item">
-        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@UserManager.GetUserName(User)">
-
+    <li id="manage-li" class="nav-item dropdown">
+        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@Model.UserName" data-bs-toggle="dropdown" role="button" aria-haspopup="true">
+            <img width="32" height="32" src="@Url.Content(Model.ProfileImageUrl)" alt="@Model.UserName" />
         </a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("All", "Forum", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
-        </form>
+        <div class="dropdown-menu dropdown-menu-end position-absolute">
+            <a asp-controller="Profile" 
+            asp-action="Detail" 
+            asp-route-id="@UserManager.GetUserId(User)"
+            class="dropdown-item mb-2">My Profile</a>
+            @*
+            @if (User.IsInRole("Admin"))
+            {
+                <li role="separator" class="dropdown-divider"></li>
+                <li class="dropdown-header">Admin</li>
+                <li><a asp-controller="Forum" asp-action="Create" class="dropdown-item">Create Forum</a></li>
+                <li><a asp-controller="Profile" asp-action="Index" class="dropdown-item">View Users</a></li>
+            }
+            *@
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("All", "Forum", new { area = "" })">
+                <button id="logout" type="submit" class="dropdown-item">Logout</button>
+            </form>
+        </div>
     </li>
 }
 else

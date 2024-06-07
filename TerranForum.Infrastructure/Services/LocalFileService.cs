@@ -15,7 +15,7 @@ namespace TerranForum.Infrastructure.Services
             _Environtment = environment;
 
             // temporary; maybe use firebase in the future?
-            ContentPath = Path.Join(_Environtment.ContentRootPath, "wwwroot");
+            ContentPath = "/";
             UploadedImagesPath = Path.Join(ContentPath, "uploadedImages");
             if (!Directory.Exists(UploadedImagesPath))
                 Directory.CreateDirectory(UploadedImagesPath);

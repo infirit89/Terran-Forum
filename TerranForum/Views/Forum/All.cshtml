@@ -21,39 +21,45 @@
             await forum);
     }
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-1">
-                <form class="page-form form-inline" method="get" asp-controller="Forum" asp-action="All">
-                    <input name="page" value="@(previousPage)" hidden />
-                    @if (previousPage > -1)
-                    {
-                        <button class="btn light-button-outline"
-                                type="submit">Previous</button>
-                    }
-                    else
-                    {
-                        <button class="btn light-button-outline"
-                            type="button" disabled>Previous</button>
-                    }
-                </form>
-            </div>
-            <div class="col-sm-1">
-                <form class="form-inline" method="get" asp-controller="Forum" asp-action="All">
-                    <input name="page" value="@(nextPage)" hidden />
+    <ul class="pagination">
+        <li class="page-item me-1">
+            <form method="get" asp-controller="Forum" asp-action="All">
+                <input name="page" value="@(previousPage)" hidden />
+                @if (previousPage > -1)
+                {
+                    <button class="btn light-button-outline"
+                            type="submit">
+                        Previous
+                    </button>
+                }
+                else
+                {
+                    <button class="btn light-button-outline"
+                            type="button" disabled>
+                        Previous
+                    </button>
+                }
+            </form>
+        </li>
+        <li class="page-item ms-1">
+            <form method="get" asp-controller="Forum" asp-action="All">
+                <input name="page" value="@(nextPage)" hidden />
 
-                    @if (currentPage != nextPage)
-                    {
-                        <button class="btn light-button-outline"
-                                type="submit">Next</button>
-                    }
-                    else
-                    {
-                        <button class="btn light-button-outline"
-                            type="button" disabled>Next</button>
-                    }
-                </form>
-            </div>
-        </div>
-    </div>
+                @if (currentPage != nextPage)
+                {
+                    <button class="btn light-button-outline"
+                            type="submit">
+                        Next
+                    </button>
+                }
+                else
+                {
+                    <button class="btn light-button-outline"
+                            type="button" disabled>
+                        Next
+                    </button>
+                }
+            </form>
+        </li>
+    </ul>
 </div>

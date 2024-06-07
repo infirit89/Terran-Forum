@@ -25,8 +25,8 @@ namespace TerranForum.Infrastructure.Services
             IForumService forumService,
             IPostService postService,
             IPostReplyService postReplyService,
-            IHostEnvironment environment,
-            IFileService fileService)
+            IFileService fileService,
+            IUserRepository userRepository)
         {
             _Logger = logger;
             _RoleManager = roleManager;
@@ -37,8 +37,8 @@ namespace TerranForum.Infrastructure.Services
             _ForumService = forumService;
             _PostService = postService;
             _PostReplyService = postReplyService;
-            _Environment = environment;
             _FileService = fileService;
+            _UserRepository = userRepository;
         }
 
         public async Task SeedRolesAsync()
@@ -127,6 +127,12 @@ namespace TerranForum.Infrastructure.Services
 
         private async Task<bool> CreateUserAndAddToRole(string userName, string role)
         {
+            if (await _UserRepository.ExsistsAsync(x => x.UserName == userName)) 
+            {
+                _Logger.LogInformation("\tUser: {0} with role: {1} already exists", userName, role);
+                return false;
+            }
+
             _Logger.LogInformation("\tCreating user: {0} with role: {1}", userName, role);
             ApplicationUser user = new ApplicationUser();
             using (var hash = SHA256.Create())
@@ -162,7 +168,6 @@ namespace TerranForum.Infrastructure.Services
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
         private readonly IUserRepository _UserRepository;
-        private readonly IHostEnvironment _Environment;
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";

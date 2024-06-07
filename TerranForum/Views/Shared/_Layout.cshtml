@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using TerranForum.Domain.Models
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,7 +24,7 @@
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <partial name="_LoginPartial" />
+                    @{await Html.RenderPartialAsync("_LoginPartial", await UserManager.GetUserAsync(User));}
                 </div>
             </nav>
         </div>
