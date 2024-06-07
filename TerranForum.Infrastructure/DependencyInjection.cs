@@ -26,6 +26,9 @@ namespace TerranForum.Infrastructure
                     connectionString, x => x.MigrationsAssembly(assemblyName));
             });
 
+            if (configurationManager.GetValue<bool>("LocalFileService")) 
+                services.AddSingleton<IFileService, LocalFileService>();
+
             services.AddScoped<IForumRepository, ForumRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostReplyRepository, PostReplyRepository>();
@@ -36,9 +39,6 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPostReplyService, PostReplyService>();
-
-            if (configurationManager.GetValue<bool>("LocalFileService")) 
-                services.AddSingleton<IFileService, LocalFileService>();
 
             services.AddTransient<ISeederService, SeederService>();
             services.AddHostedService<HostedSeederService>();

@@ -14,17 +14,28 @@ namespace TerranForum.Controllers
 {
     public class ForumController : Controller
     {
-        public ForumController(IForumService forumService, IForumRepository forumRepository,
-            ILogger<ForumController> logger, UserManager<ApplicationUser> userManager)
+        public ForumController(
+            IForumService forumService,
+            IForumRepository forumRepository,
+            ILogger<ForumController> logger,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _ForumService = forumService;
             _ForumRepository = forumRepository;
             _Logger = logger;
             _UserManager = userManager;
+            _SignInManager = signInManager;
         }
 
         public async Task<IActionResult> All(int? page)
         {
+            if (_SignInManager.IsSignedIn(User) && await _UserManager.GetUserAsync(User) == null) 
+            {
+                await _SignInManager.SignOutAsync();
+                return RedirectToAction("All");
+            }
+
             int currentPage = page ?? 0;
             ForumsPagedModel pagedForums =  await _ForumRepository.GetForumsPagedAsync(currentPage, _PageSize);
             ViewData["CurrentPage"] = currentPage;
@@ -190,5 +201,6 @@ namespace TerranForum.Controllers
         private readonly ILogger<ForumController> _Logger;
         private const int _PageSize = 10;
         private const int _MasterPostContentThumbnailSize = 250;
+        private readonly SignInManager<ApplicationUser> _SignInManager;
     }
 }

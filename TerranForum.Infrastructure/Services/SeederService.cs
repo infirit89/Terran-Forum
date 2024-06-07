@@ -7,9 +7,11 @@ using System.Text;
 using TerranForum.Application.Dtos.ForumDtos;
 using TerranForum.Application.Dtos.PostDtos;
 using TerranForum.Application.Dtos.PostReplyDtos;
+using TerranForum.Application.Dtos.UserDtos;
 using TerranForum.Application.Repositories;
 using TerranForum.Application.Services;
 using TerranForum.Domain.Enums;
+using TerranForum.Domain.Exceptions;
 using TerranForum.Domain.Models;
 
 namespace TerranForum.Infrastructure.Services
@@ -17,28 +19,24 @@ namespace TerranForum.Infrastructure.Services
     public class SeederService : ISeederService
     {
         public SeederService(ILogger<SeederService> logger,
-            RoleManager<IdentityRole> roleManager, 
-            IUserStore<ApplicationUser> userStore, 
+            RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IPostRepository postRepository,
             IForumRepository forumRepository,
             IForumService forumService,
             IPostService postService,
             IPostReplyService postReplyService,
-            IFileService fileService,
-            IUserRepository userRepository)
+            IUserService userService)
         {
             _Logger = logger;
             _RoleManager = roleManager;
-            _UserStore = userStore;
             _UserManager = userManager;
             _PostRepository = postRepository;
             _ForumRepository = forumRepository;
             _ForumService = forumService;
             _PostService = postService;
             _PostReplyService = postReplyService;
-            _FileService = fileService;
-            _UserRepository = userRepository;
+            _UserService = userService;
         }
 
         public async Task SeedRolesAsync()
@@ -127,35 +125,28 @@ namespace TerranForum.Infrastructure.Services
 
         private async Task<bool> CreateUserAndAddToRole(string userName, string role)
         {
-            if (await _UserRepository.ExsistsAsync(x => x.UserName == userName)) 
+            try
             {
-                _Logger.LogInformation("\tUser: {0} with role: {1} already exists", userName, role);
+                _Logger.LogInformation("\tCreating user: {0} with role: {1}", userName, role);
+                await _UserService.CreateWithRoleAsync(new CreateUserDto
+                {
+                    Username = userName,
+                    Email = userName,
+                    Password = TestPassword,
+                    Role = role
+                });
+                return true;
+            }
+            catch (ModelAlreadyExistsException)
+            {
+                _Logger.LogWarning("\tUser: {0} with role: {1} already exists", userName, role);
                 return false;
             }
-
-            _Logger.LogInformation("\tCreating user: {0} with role: {1}", userName, role);
-            ApplicationUser user = new ApplicationUser();
-            using (var hash = SHA256.Create())
+            catch (CreateModelException) 
             {
-                byte[] idHash = hash.ComputeHash(Encoding.UTF8.GetBytes(user.Id));
-                string iconFileName = $"{Guid.NewGuid()}.svg";
-                string iconFilePath = Path.Join(_FileService.UploadedImagesPath, iconFileName);
-                await Identicon
-                    .FromHash(idHash, 100)
-                    .SaveAsSvgAsync(iconFilePath);
-
-                user.ProfileImageUrl = iconFilePath;
-            }
-            await _UserStore.SetUserNameAsync(user, userName, default);
-            await ((IUserEmailStore<ApplicationUser>)_UserStore).SetEmailAsync(user, userName, default);
-            await ((IUserEmailStore<ApplicationUser>)_UserStore).SetEmailConfirmedAsync(user, true, default);
-            var result = await _UserManager.CreateAsync(user, TestPassword);
-            if (result != IdentityResult.Success)
+                _Logger.LogError("\tCouldn't create User: {0} with role: {1}", userName, role);
                 return false;
-
-            await _UserManager.AddToRoleAsync(user, role);
-
-            return true;
+            }
         }
 
         private readonly ILogger<SeederService> _Logger;
@@ -163,15 +154,13 @@ namespace TerranForum.Infrastructure.Services
         private readonly IPostService _PostService;
         private readonly IPostReplyService _PostReplyService;
         private readonly RoleManager<IdentityRole> _RoleManager;
-        private readonly IUserStore<ApplicationUser> _UserStore;
+        private readonly IUserService _UserService;
         private readonly UserManager<ApplicationUser> _UserManager;
         private readonly IPostRepository _PostRepository;
         private readonly IForumRepository _ForumRepository;
-        private readonly IUserRepository _UserRepository;
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";
-        private readonly IFileService _FileService;
         
         private struct TestForumData 
         {

@@ -1,5 +1,4 @@
-﻿@model ApplicationUser
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using TerranForum.Domain.Models
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -8,13 +7,24 @@
 <ul class="navbar-nav ms-auto">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li id="manage-li" class="nav-item dropdown">
-        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="@Model.UserName" data-bs-toggle="dropdown" role="button" aria-haspopup="true">
-            <img width="32" height="32" src="@Url.Content(Model.ProfileImageUrl)" alt="@Model.UserName" />
+    <li class="nav-item d-flex align-items-center">
+        <a class="nav-link d-flex" asp-controller="Forum" asp-action="Create">
+            <span class="material-symbols-outlined align-self-center">
+                add
+            </span>
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a id="manage" class="nav-link" title="@UserManager.GetUserName(User)" data-bs-toggle="dropdown" role="button" aria-haspopup="true">
+                @* 
+
+                <img width="32" height="32" src="@Url.Content(Model.ProfileImageUrl)" alt="@UserManager.GetUserName(User)" />
+                *@
+            cum
         </a>
         <div class="dropdown-menu dropdown-menu-end position-absolute">
-            <a asp-controller="Profile" 
-            asp-action="Detail" 
+            <a asp-area="Identity"
+            asp-page="/Account/Manage/Index"
             asp-route-id="@UserManager.GetUserId(User)"
             class="dropdown-item mb-2">My Profile</a>
             @*
