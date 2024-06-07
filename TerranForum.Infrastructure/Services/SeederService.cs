@@ -25,7 +25,8 @@ namespace TerranForum.Infrastructure.Services
             IForumService forumService,
             IPostService postService,
             IPostReplyService postReplyService,
-            IHostEnvironment environment)
+            IHostEnvironment environment,
+            IFileService fileService)
         {
             _Logger = logger;
             _RoleManager = roleManager;
@@ -37,6 +38,7 @@ namespace TerranForum.Infrastructure.Services
             _PostService = postService;
             _PostReplyService = postReplyService;
             _Environment = environment;
+            _FileService = fileService;
         }
 
         public async Task SeedRolesAsync()
@@ -129,8 +131,14 @@ namespace TerranForum.Infrastructure.Services
             ApplicationUser user = new ApplicationUser();
             using (var hash = SHA256.Create())
             {
-                string contentPath = Path.Join(_Environment.ContentRootPath, "wwwroot");
-                await Identicon.FromHash(user.Id, 100).SaveAsSvgAsync(Path.Join(contentPath, $"{Guid.NewGuid().ToString()}.svg"));
+                byte[] idHash = hash.ComputeHash(Encoding.UTF8.GetBytes(user.Id));
+                string iconFileName = $"{Guid.NewGuid()}.svg";
+                string iconFilePath = Path.Join(_FileService.UploadedImagesPath, iconFileName);
+                await Identicon
+                    .FromHash(idHash, 100)
+                    .SaveAsSvgAsync(iconFilePath);
+
+                user.ProfileImageUrl = iconFilePath;
             }
             await _UserStore.SetUserNameAsync(user, userName, default);
             await ((IUserEmailStore<ApplicationUser>)_UserStore).SetEmailAsync(user, userName, default);
@@ -142,10 +150,6 @@ namespace TerranForum.Infrastructure.Services
             await _UserManager.AddToRoleAsync(user, role);
 
             return true;
-        }
-
-        public async Task SeedUserIconsAsync() 
-        {
         }
 
         private readonly ILogger<SeederService> _Logger;
@@ -162,6 +166,7 @@ namespace TerranForum.Infrastructure.Services
         private const string TestAdmin = "Admin0@mail.com";
         private const string TestUser = "User0@mail.com";
         private const string TestPassword = "Test@T1";
+        private readonly IFileService _FileService;
         
         private struct TestForumData 
         {

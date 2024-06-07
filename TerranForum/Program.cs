@@ -23,7 +23,7 @@ namespace TerranForum
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<TerranForumDbContext>();
 
-            builder.Services.AddInfrastructure(connectionString);
+            builder.Services.AddInfrastructure(connectionString, builder.Configuration);
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddRazorPages();

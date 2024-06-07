@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TerranForum.Application.Repositories;
@@ -11,7 +12,7 @@ namespace TerranForum.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString) 
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString, ConfigurationManager configurationManager)
         {
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             string assemblyName = currentAssembly.GetName().Name ?? throw new NullReferenceException("Infrastructure Assembly name was null");
@@ -35,6 +36,9 @@ namespace TerranForum.Infrastructure
             services.AddScoped<IForumService, ForumService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPostReplyService, PostReplyService>();
+
+            if (configurationManager.GetValue<bool>("LocalFileService")) 
+                services.AddSingleton<IFileService, LocalFileService>();
 
             services.AddTransient<ISeederService, SeederService>();
             services.AddHostedService<HostedSeederService>();
