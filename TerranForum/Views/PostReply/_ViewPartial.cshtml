@@ -1,23 +1,9 @@
 ﻿@using TerranForum.Domain.Models
 @using Microsoft.AspNetCore.Identity
 @using TerranForum.Domain.Enums
-@using TerranForum.ViewModels.PostReply
 @model PostReplyViewModel
 
 @inject UserManager<ApplicationUser> UserManager
-
-@*
-
-<div class="container mb-1 pb-1 border-bottom secondary-border" id="manageReply" replyId="@Model.Id" postId="@Model.PostId">
-    <span class="text-justify">
-        @Model.Content
-        @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
-        {
-            <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
-        }
-    </span>
-</div>
-*@
 
 <blockquote class="blockquote post-comment">
     <p class="text-justify">
@@ -25,7 +11,10 @@
     </p>
     <footer class="blockquote-footer">
         @*todo link to user page*@
-        <a class="secondary-anchor" asp-area="Identity" asp-page="/Account/Manage/Index">@UserManager.GetUserName(User)</a>
+        <a class="secondary-anchor"
+        asp-controller="Profile"
+        asp-action="ViewProfile"
+        asp-route-userName="@Model.Username">@Model.Username</a>
         @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
         {
             <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>

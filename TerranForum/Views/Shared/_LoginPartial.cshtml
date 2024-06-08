@@ -25,9 +25,14 @@
             }
         </a>
         <div class="dropdown-menu dropdown-menu-end position-absolute">
+            <a asp-controller="Profile"
+            asp-action="ViewProfile"
+            asp-route-userName="@UserManager.GetUserName(User)"
+            class="dropdown-item">My Profile</a>
+
             <a asp-area="Identity"
             asp-page="/Account/Manage/Index"
-            class="dropdown-item mb-2">My Profile</a>
+            class="dropdown-item mb-2">Settings</a>
             @*
             @if (User.IsInRole("Admin"))
             {

@@ -104,7 +104,8 @@ namespace TerranForum.Controllers
                         Id = pr.Id,
                         PostId = pr.PostId,
                         Content = pr.Content,
-                        UserId = pr.UserId
+                        UserId = pr.UserId,
+                        Username = pr.User.UserName
                     })
                 })
             };
