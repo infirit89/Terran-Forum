@@ -79,6 +79,7 @@ namespace TerranForum.Infrastructure.Repositories
                         .Skip(page * size)
                         .Take(size);
 
+            // todo: implement better searching?
             if (predicate != null)
                 pagedData = pagedData.Where(predicate);
 

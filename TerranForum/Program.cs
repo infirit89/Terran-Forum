@@ -14,16 +14,24 @@ namespace TerranForum
             string connectionString = builder.Configuration.GetConnectionString("TerranForum") ??
                 throw new NullReferenceException("Connection string was null");
 
-            builder.Services.AddDbContext<TerranForumDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            builder.Services.AddRouting(options => 
+            {
+                options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
+            });
 
-            // Add services to the container.
+            builder.Services.AddInfrastructure(connectionString, builder.Configuration);
+
             builder.Services
-                .AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedEmail = false)
+                .AddDefaultIdentity<ApplicationUser>(options => 
+                {
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.User.RequireUniqueEmail = true;
+                    options.Lockout.MaxFailedAccessAttempts = 8;
+                })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<TerranForumDbContext>();
 
-            builder.Services.AddInfrastructure(connectionString, builder.Configuration);
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddRazorPages();
@@ -44,8 +52,8 @@ namespace TerranForum
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

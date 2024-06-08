@@ -25,7 +25,7 @@
     </p>
     <footer class="blockquote-footer">
         @*todo link to user page*@
-        <a>@UserManager.GetUserName(User)</a>
+        <a class="secondary-anchor" asp-area="Identity" asp-page="/Account/Manage/Index">@UserManager.GetUserName(User)</a>
         @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
         {
             <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
