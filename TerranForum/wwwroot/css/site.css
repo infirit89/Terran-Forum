@@ -245,3 +245,28 @@ textarea {
     color: var(--text-color);
     background-color: var(--text-950);
 }
+
+.search-button {
+    border-radius: 0px 999px 999px 0px;
+    background-color: var(--text-950);
+    color: var(--text-color);
+    border-color: var(--text-900);
+    user-select: none;
+    font-variation-settings: 'wght' 200,'opsz' 40;
+}
+
+.search-bar {
+    border-radius: 999px 0px 0px 999px;
+    border: 1px solid var(--text-900);
+    background-color: var(--text-950);
+    user-select: none;
+}
+.search-bar:focus {
+    color: var(--text-color);
+    background-color: var(--text-950);
+    border-color: var(--text-900);
+}
+
+.search-container {
+    min-width: 25vw;
+}

@@ -28,7 +28,7 @@ namespace TerranForum.Controllers
             _SignInManager = signInManager;
         }
 
-        public async Task<IActionResult> All(int? page)
+        public async Task<IActionResult> All(int? page, string? q)
         {
             if (_SignInManager.IsSignedIn(User) && await _UserManager.GetUserAsync(User) == null) 
             {
@@ -37,9 +37,18 @@ namespace TerranForum.Controllers
             }
 
             int currentPage = page ?? 0;
-            ForumsPagedModel pagedForums =  await _ForumRepository.GetForumsPagedAsync(currentPage, _PageSize);
+            ForumsPagedModel pagedForums;
+
+            if(q is null)
+                pagedForums =  await _ForumRepository
+                    .GetForumsPagedAsync(currentPage, _PageSize);
+            else
+                pagedForums = await _ForumRepository
+                    .GetForumsPagedAsync(currentPage, _PageSize, x => x.Title.ToLower().Contains(q.ToLower()));
+
             ViewData["CurrentPage"] = currentPage;
             ViewData["PageCount"] = pagedForums.PageCount;
+            ViewData["ForumCount"] = pagedForums.Data.Count();
             IEnumerable<Task<ForumViewModel>> forumData =
                 pagedForums.Data
                 .Select(

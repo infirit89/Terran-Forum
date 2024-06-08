@@ -21,45 +21,52 @@
             await forum);
     }
 
-    <ul class="pagination">
-        <li class="page-item me-1">
-            <form method="get" asp-controller="Forum" asp-action="All">
-                <input name="page" value="@(previousPage)" hidden />
-                @if (previousPage > -1)
-                {
-                    <button class="btn light-button-outline"
-                            type="submit">
-                        Previous
-                    </button>
-                }
-                else
-                {
-                    <button class="btn light-button-outline"
-                            type="button" disabled>
-                        Previous
-                    </button>
-                }
-            </form>
-        </li>
-        <li class="page-item ms-1">
-            <form method="get" asp-controller="Forum" asp-action="All">
-                <input name="page" value="@(nextPage)" hidden />
+    @if ((int)ViewData["ForumCount"]! > 0)
+    {
+        <ul class="pagination">
+            <li class="page-item me-1">
+                <form method="get" asp-controller="Forum" asp-action="All">
+                    <input name="page" value="@(previousPage)" hidden />
+                    @if (previousPage > -1)
+                    {
+                        <button class="btn light-button-outline"
+                                type="submit">
+                            Previous
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn light-button-outline"
+                                type="button" disabled>
+                            Previous
+                        </button>
+                    }
+                </form>
+            </li>
+            <li class="page-item ms-1">
+                <form method="get" asp-controller="Forum" asp-action="All">
+                    <input name="page" value="@(nextPage)" hidden />
 
-                @if (currentPage != nextPage)
-                {
-                    <button class="btn light-button-outline"
-                            type="submit">
-                        Next
-                    </button>
-                }
-                else
-                {
-                    <button class="btn light-button-outline"
-                            type="button" disabled>
-                        Next
-                    </button>
-                }
-            </form>
-        </li>
-    </ul>
+                    @if (currentPage != nextPage)
+                    {
+                        <button class="btn light-button-outline"
+                                type="submit">
+                            Next
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn light-button-outline"
+                                type="button" disabled>
+                            Next
+                        </button>
+                    }
+                </form>
+            </li>
+        </ul>
+    }
+    else
+    {
+        <h1>Seems empty around here...</h1>
+    }
 </div>

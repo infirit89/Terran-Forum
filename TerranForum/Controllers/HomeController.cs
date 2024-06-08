@@ -13,6 +13,11 @@ namespace TerranForum.Controllers
         }
 
 
+        public IActionResult Index()
+        {
+            return RedirectToAction("All", "Forum");
+        }
+
         public IActionResult Privacy()
         {
             return View();

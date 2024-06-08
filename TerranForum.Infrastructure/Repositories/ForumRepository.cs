@@ -72,11 +72,19 @@ namespace TerranForum.Infrastructure.Repositories
             return await _DbContext.TrySaveAsync();
         }
 
-        public async Task<ForumsPagedModel> GetForumsPagedAsync(int page, int size) 
+        public async Task<ForumsPagedModel> GetForumsPagedAsync(int page, int size, Expression<Func<Forum, bool>>? predicate = null)
         {
+            var pagedData = _DbContext
+                        .Forums
+                        .Skip(page * size)
+                        .Take(size);
+
+            if (predicate != null)
+                pagedData = pagedData.Where(predicate);
+
             return new ForumsPagedModel()
             {
-                Data = await _DbContext.Forums.Skip(page * size).Take(size).ToListAsync(),
+                Data = await pagedData.ToListAsync(),
                 PageCount = Math.Max(await _DbContext.Forums.CountAsync() / size, 1)
             };
         }
