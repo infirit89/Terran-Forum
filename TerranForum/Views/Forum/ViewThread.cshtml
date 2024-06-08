@@ -13,6 +13,7 @@
 }
 
 <link href="~/css/page-viewthread.css" rel="stylesheet"/>
+<link href="~/css/post-comment.css" rel="stylesheet"/>
 
 <div class="container w-75">
     <h3>@Model.Title</h3>
@@ -61,5 +62,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/viewthread.js"></script>
+    <script src="~/js/viewthread.js" asp-append-version="true"></script>
 }

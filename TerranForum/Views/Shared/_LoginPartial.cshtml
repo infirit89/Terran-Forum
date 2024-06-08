@@ -16,16 +16,17 @@
     </li>
     <li class="nav-item dropdown">
         <a id="manage" class="nav-link" title="@UserManager.GetUserName(User)" data-bs-toggle="dropdown" role="button" aria-haspopup="true">
-                @* 
-
-                <img width="32" height="32" src="@Url.Content(Model.ProfileImageUrl)" alt="@UserManager.GetUserName(User)" />
-                *@
-            cum
+            @{
+                ApplicationUser user = await UserManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    <img width="32" height="32" src="@Url.Content($"~/{user.ProfileImageUrl}")" alt="@UserManager.GetUserName(User)" />
+                }
+            }
         </a>
         <div class="dropdown-menu dropdown-menu-end position-absolute">
             <a asp-area="Identity"
             asp-page="/Account/Manage/Index"
-            asp-route-id="@UserManager.GetUserId(User)"
             class="dropdown-item mb-2">My Profile</a>
             @*
             @if (User.IsInRole("Admin"))

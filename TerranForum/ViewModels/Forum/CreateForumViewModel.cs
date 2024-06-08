@@ -8,7 +8,7 @@ namespace TerranForum.ViewModels.Forum
         [Required]
         [Display(Name = "title")]
         [StringLength(
-        maximumLength: Constants.MaxForumThreadTitleSize,
+        Constants.MaxForumThreadTitleSize,
         ErrorMessage = ErrorMessages.CreateErrorMessage,
         MinimumLength = Constants.MinForumThreadTitleSize)]
         public string Title { get; set; } = null!;

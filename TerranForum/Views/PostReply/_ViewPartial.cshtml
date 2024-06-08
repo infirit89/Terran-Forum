@@ -6,6 +6,8 @@
 
 @inject UserManager<ApplicationUser> UserManager
 
+@*
+
 <div class="container mb-1 pb-1 border-bottom secondary-border" id="manageReply" replyId="@Model.Id" postId="@Model.PostId">
     <span class="text-justify">
         @Model.Content
@@ -15,3 +17,18 @@
         }
     </span>
 </div>
+*@
+
+<blockquote class="blockquote post-comment">
+    <p class="text-justify">
+        @Model.Content
+    </p>
+    <footer class="blockquote-footer">
+        @*todo link to user page*@
+        <a>@UserManager.GetUserName(User)</a>
+        @if (UserManager.GetUserId(User) == Model.UserId || User.IsInRole(Roles.Admin))
+        {
+            <a asp-controller="PostReply" asp-action="GetPostReplyDeleteView" class="danger-anchor">Delete</a>
+        }
+    </footer>
+</blockquote>
