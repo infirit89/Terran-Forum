@@ -1,10 +1,12 @@
 ﻿using TerranForum.Application.Dtos.UserDtos;
+using TerranForum.Application.Responses;
+using TerranForum.Domain.Models;
 
 namespace TerranForum.Application.Services
 {
     public interface IUserService
     {
         Task<bool> IsUserAdmin(string userId);
-        Task CreateWithRoleAsync(CreateUserDto createUserDto);
+        Task<IdentityDataResponse<ApplicationUser>> CreateWithRoleAsync(CreateUserDto createUserDto);
     }
 }

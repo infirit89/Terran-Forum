@@ -1,4 +1,24 @@
-﻿@{
+﻿@model UserViewModel
+@{
+    TimeSpan memberFor = DateTimeOffset.UtcNow - Model.JoinedAt;
+
+    string getMemberForStr()
+    {
+        if (memberFor.Hours > 0 && memberFor.Days <= 0)
+            return $"{memberFor.Hours} hours";
+        else if (memberFor.Days > 0)
+            return $"{memberFor.Days} days";
+
+        return $"{memberFor.Minutes} minutes";
+    }
 }
 
-<h1>@ViewData["Username"]</h1>
+<div class="row">
+    <div class="col-md-1">
+        <img width="100" height="100" src="@Url.Content($"~/{Model.ProfilePictureUrl}")" alt="@Model.Username" />
+    </div>
+    <div class="col-md-3">
+        <div>@Model.Username</div>
+        <div>Member for @getMemberForStr()</div>
+    </div>
+</div>
