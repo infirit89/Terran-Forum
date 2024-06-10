@@ -17,6 +17,9 @@ namespace TerranForum.Controllers
         public async Task<IActionResult> ViewProfile(string userName) 
         {
             ApplicationUser user = await _UserManager.FindByNameAsync(userName);
+            if (user == null)
+                return NotFound();
+
             return View(new UserViewModel
             {
                 Username = user.UserName,
