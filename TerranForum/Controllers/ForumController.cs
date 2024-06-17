@@ -28,6 +28,7 @@ namespace TerranForum.Controllers
             _SignInManager = signInManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> All(int? page, string? q)
         {
             if (_SignInManager.IsSignedIn(User) && await _UserManager.GetUserAsync(User) == null) 
@@ -58,7 +59,7 @@ namespace TerranForum.Controllers
 
         private async Task<ForumViewModel> ConvertToForumViewModel(Forum forum) 
         {
-            Post masterPost = await _ForumService.GetForumMasterPost(forum.Id);
+            Post masterPost = await _ForumService.GetForumMasterPostAsync(forum.Id);
             string masterPostContent = new string(masterPost.Content
                             .Take(_MasterPostContentThumbnailSize)
                             .ToArray());
@@ -77,6 +78,7 @@ namespace TerranForum.Controllers
             };
         }
 
+        [HttpGet]
         public async Task<IActionResult> ViewThread(int forumId)
         {
             Forum? forum = await _ForumRepository.GetByIdWithAllAsync(forumId);
@@ -119,7 +121,7 @@ namespace TerranForum.Controllers
             return View();
         }
 
-        [Authorize, HttpPost]
+        [Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateThread(CreateForumViewModel createForumViewModel)
         {
             if (!ModelState.IsValid)
@@ -148,12 +150,12 @@ namespace TerranForum.Controllers
             }
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int forumId) 
         {
             try
             {
-                await _ForumService.DeleteForumThread(forumId, _UserManager.GetUserId(User));
+                await _ForumService.DeleteForumThreadAsync(forumId, _UserManager.GetUserId(User));
                 return RedirectToAction("All", "Forum");
             }
             catch (TerranForumException ex)
@@ -168,7 +170,7 @@ namespace TerranForum.Controllers
         {
             try
             {
-                ForumDataModel forumData = await _ForumService.GetForumData(forumId, _UserManager.GetUserId(User));
+                ForumDataModel forumData = await _ForumService.GetForumDataAsync(forumId, _UserManager.GetUserId(User));
                 return View(new UpdateForumViewModel 
                 {
                     Title = forumData.Title,
@@ -183,12 +185,12 @@ namespace TerranForum.Controllers
             }
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UpdateForumViewModel updateForumViewModel) 
         {
             try
             {
-                await _ForumService.UpdateForumThread(new UpdateForumModel
+                await _ForumService.UpdateForumThreadAsync(new UpdateForumModel
                 {
                     ForumId = updateForumViewModel.ForumId,
                     UserId = _UserManager.GetUserId(User),

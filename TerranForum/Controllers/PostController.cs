@@ -27,7 +27,7 @@ namespace TerranForum.Controllers
             _PostRepository = postRepository;
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment(CreatePostCommentViewModel createPostCommentViewModel)
         {
             if (!ModelState.IsValid)
@@ -38,7 +38,7 @@ namespace TerranForum.Controllers
 
             try
             {
-                await _PostReplyService.AddPostReply(new()
+                await _PostReplyService.AddPostReplyAsync(new()
                 {
                     Content = createPostCommentViewModel.Content,
                     UserId = _UserManager.GetUserId(User),
@@ -69,7 +69,7 @@ namespace TerranForum.Controllers
                 });
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePost(CreatePostViewModel createPostViewModel)
         {
             if (!ModelState.IsValid)
@@ -84,7 +84,7 @@ namespace TerranForum.Controllers
 
             try
             {
-                await _PostService.AddPostToThread(createPostModel);
+                await _PostService.AddPostToThreadAsync(createPostModel);
             }
             catch (TerranForumException ex)
             {
@@ -106,7 +106,7 @@ namespace TerranForum.Controllers
                 if (!(rating >= -1 && rating <= 1))
                     return StatusCode(500);
 
-                int newRating = await _PostService.ChangeRating(new UpdatePostRatingModel()
+                int newRating = await _PostService.ChangeRatingAsync(new UpdatePostRatingModel()
                 {
                     UserId = _UserManager.GetUserId(User),
                     PostId = postId,
@@ -126,7 +126,7 @@ namespace TerranForum.Controllers
         {
             try
             {
-                model.IsMaster = await _PostService.IsMasterPost(model.PostId);
+                model.IsMaster = await _PostService.IsMasterPostAsync(model.PostId);
 
                 return PartialView(
                     "~/Views/Post/_DeletePartial.cshtml",
@@ -139,15 +139,15 @@ namespace TerranForum.Controllers
             }
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(DeletePostViewModel model) 
         {
             try
             {
-                if (await _PostService.IsMasterPost(model.PostId))
+                if (await _PostService.IsMasterPostAsync(model.PostId))
                     return StatusCode(500);
 
-                await _PostService.DeletePost(new DeletePostModel
+                await _PostService.DeletePostAsync(new DeletePostModel
                 {
                     UserId = _UserManager.GetUserId(User),
                     PostId = model.PostId,
@@ -186,15 +186,15 @@ namespace TerranForum.Controllers
             });
         }
 
-        [HttpPost, Authorize]
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditPostViewModel editPostViewModel) 
         {
             try
             {
-                if (await _PostService.IsMasterPost(editPostViewModel.PostId))
+                if (await _PostService.IsMasterPostAsync(editPostViewModel.PostId))
                     return StatusCode(500);
 
-                await _PostService.UpdatePost(new UpdatePostModel
+                await _PostService.UpdatePostAsync(new UpdatePostModel
                 {
                     PostId = editPostViewModel.PostId,
                     UserId = _UserManager.GetUserId(User),

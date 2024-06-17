@@ -19,6 +19,7 @@ namespace TerranForum
                 options.LowercaseUrls = true;
                 options.LowercaseQueryStrings = true;
             });
+            builder.Services.AddAntiforgery(options => options.HeaderName = "XSRF-TOKEN");
 
             builder.Services.AddInfrastructure(connectionString, builder.Configuration);
 

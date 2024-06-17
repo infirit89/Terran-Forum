@@ -24,7 +24,7 @@ namespace TerranForum.Infrastructure.Services
             _FileService = fileService;
         }
 
-        public async Task<bool> IsUserAdmin(string userId)
+        public async Task<bool> IsUserAdminAsync(string userId)
         {
             ApplicationUser user = await _UserManager.FindByIdAsync(userId);
             return await _UserManager.IsInRoleAsync(user, Roles.Admin);

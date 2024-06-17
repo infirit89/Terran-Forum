@@ -94,7 +94,7 @@ namespace TerranForum.Infrastructure.Services
                         UserId = user.Id,
                         PostId = masterPost.Id
                     };
-                    await _PostReplyService.AddPostReply(createPostReplyModel);
+                    await _PostReplyService.AddPostReplyAsync(createPostReplyModel);
                 }
                 else 
                 {
@@ -114,7 +114,7 @@ namespace TerranForum.Infrastructure.Services
                         ForumId = forum!.Id
                     };
 
-                    await _PostService.AddPostToThread(createPostModel);
+                    await _PostService.AddPostToThreadAsync(createPostModel);
                 }
                 else 
                 {

@@ -5,11 +5,11 @@ namespace TerranForum.Application.Services
 {
     public interface IPostService
     {
-        Task<Post> AddPostToThread(CreatePostModel createPostModel);
-        Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel);
-        Task<int> GetUserRating(string userId, int postId);
-        Task DeletePost(DeletePostModel deletePostModel);
-        Task<bool> IsMasterPost(int postId);
-        Task UpdatePost(UpdatePostModel updatePostModel);
+        Task<Post> AddPostToThreadAsync(CreatePostModel createPostModel);
+        Task<int> ChangeRatingAsync(UpdatePostRatingModel updatePostRatingModel);
+        Task<int> GetUserRatingAsync(string userId, int postId);
+        Task DeletePostAsync(DeletePostModel deletePostModel);
+        Task<bool> IsMasterPostAsync(int postId);
+        Task UpdatePostAsync(UpdatePostModel updatePostModel);
     }
 }

@@ -20,7 +20,7 @@ namespace TerranForum.Infrastructure.Services
             _UserService = userService;
         }
 
-        public async Task<PostReply> AddPostReply(CreatePostReplyModel createPostReplyModel)
+        public async Task<PostReply> AddPostReplyAsync(CreatePostReplyModel createPostReplyModel)
         {
             if (!await _PostRepository.ExistsAsync(x => x.Id == createPostReplyModel.PostId))
                 throw new PostNotFoundException();
@@ -52,7 +52,7 @@ namespace TerranForum.Infrastructure.Services
 
             PostReply postReply;
 
-            if (!await _UserService.IsUserAdmin(deletePostReplyModel.UserId))
+            if (!await _UserService.IsUserAdminAsync(deletePostReplyModel.UserId))
             {
                 postReply = await _PostReplyRepository
                     .GetFirstAsync(

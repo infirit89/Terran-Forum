@@ -5,7 +5,7 @@ namespace TerranForum.Application.Services
 {
     public interface IPostReplyService
     {
-        Task<PostReply> AddPostReply(CreatePostReplyModel createPostReplyModel);
+        Task<PostReply> AddPostReplyAsync(CreatePostReplyModel createPostReplyModel);
         Task DeletePostReplyAsync(DeletePostReplyModel deletePostReplyModel);
     }
 }

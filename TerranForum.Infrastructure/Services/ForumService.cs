@@ -51,7 +51,7 @@ namespace TerranForum.Infrastructure.Services
             throw new CreateModelException();
         }
 
-        public async Task<Post> GetForumMasterPost(int forumId) 
+        public async Task<Post> GetForumMasterPostAsync(int forumId) 
         {
             Post post = await _PostRepository
                 .GetFirstWithAsync(p =>
@@ -61,13 +61,13 @@ namespace TerranForum.Infrastructure.Services
             return post;
         }
 
-        public async Task DeleteForumThread(int forumId, string userId)
+        public async Task DeleteForumThreadAsync(int forumId, string userId)
         {
             if (!await _UserRepository.ExsistsAsync(x => x.Id == userId))
                 throw new UserNotFoundException();
 
 
-            if (!await _UserService.IsUserAdmin(userId))
+            if (!await _UserService.IsUserAdminAsync(userId))
             {
                 if (!await _PostRepository.ExistsAsync(x => x.ForumId == forumId && x.IsMaster && x.UserId == userId))
                     throw new PostNotFoundException();
@@ -103,7 +103,7 @@ namespace TerranForum.Infrastructure.Services
                 throw new DeleteModelException();
         }
 
-        public async Task UpdateForumThread(UpdateForumModel updateForumModel)
+        public async Task UpdateForumThreadAsync(UpdateForumModel updateForumModel)
         {
             if (!await _UserRepository.ExsistsAsync(x => x.Id == updateForumModel.UserId))
                 throw new UserNotFoundException();
@@ -127,7 +127,7 @@ namespace TerranForum.Infrastructure.Services
                 throw new UpdateModelException();
         }
 
-        public async Task<ForumDataModel> GetForumData(int forumId, string userId)
+        public async Task<ForumDataModel> GetForumDataAsync(int forumId, string userId)
         {
             Post masterPost = await _PostRepository
                 .GetFirstWithAsync(x => 

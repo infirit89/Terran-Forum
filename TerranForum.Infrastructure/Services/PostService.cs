@@ -23,7 +23,7 @@ namespace TerranForum.Infrastructure.Services
             _UserService = userService;
         }
 
-        public async Task<Post> AddPostToThread(CreatePostModel createPostModel)
+        public async Task<Post> AddPostToThreadAsync(CreatePostModel createPostModel)
         {
             if (!await _ForumRepository.ExistsAsync(x => x.Id == createPostModel.ForumId))
                 throw new ForumNotFoundException();
@@ -46,7 +46,7 @@ namespace TerranForum.Infrastructure.Services
             throw new CreateModelException();
         }
 
-        public async Task<int> ChangeRating(UpdatePostRatingModel updatePostRatingModel)
+        public async Task<int> ChangeRatingAsync(UpdatePostRatingModel updatePostRatingModel)
         {
             if (!await _PostRepository.ExistsAsync(x => x.Id == updatePostRatingModel.PostId))
                 throw new PostNotFoundException();
@@ -92,13 +92,13 @@ namespace TerranForum.Infrastructure.Services
             return post.Ratings.Sum(r => r.Value);
         }
 
-        public async Task<int> GetUserRating(string userId, int postId)
+        public async Task<int> GetUserRatingAsync(string userId, int postId)
         {
             Rating<Post>? postRating = await _PostRatingRepository.GetAsync(userId, postId);
             return postRating != null ? postRating.Value : 0;
         }
 
-        public async Task DeletePost(DeletePostModel deletePostModel)
+        public async Task DeletePostAsync(DeletePostModel deletePostModel)
         {
             if (!await _ForumRepository.ExistsAsync(x => x.Id == deletePostModel.ForumId))
                 throw new ForumNotFoundException();
@@ -108,7 +108,7 @@ namespace TerranForum.Infrastructure.Services
 
             Expression<Func<Post, bool>> predicate;
 
-            if (await _UserService.IsUserAdmin(deletePostModel.UserId))
+            if (await _UserService.IsUserAdminAsync(deletePostModel.UserId))
                 predicate = (x) =>
                     x.Id == deletePostModel.PostId
                         && x.ForumId == deletePostModel.ForumId;
@@ -125,7 +125,7 @@ namespace TerranForum.Infrastructure.Services
                 throw new DeleteModelException();
         }
 
-        public async Task<bool> IsMasterPost(int postId)
+        public async Task<bool> IsMasterPostAsync(int postId)
         {
             Post post = await _PostRepository.GetByIdAsync(postId) ??
                 throw new PostNotFoundException();
@@ -133,7 +133,7 @@ namespace TerranForum.Infrastructure.Services
             return post.IsMaster;
         }
 
-        public async Task UpdatePost(UpdatePostModel updatePostModel)
+        public async Task UpdatePostAsync(UpdatePostModel updatePostModel)
         {
             if (!await _UserRepository.ExsistsAsync(x => x.Id == updatePostModel.UserId))
                 throw new UserNotFoundException();
